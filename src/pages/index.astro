@@ -1,5 +1,6 @@
 ---
 import PageLayout from "../layouts/Page.astro";
+import { Icon } from 'astro-icon/components'
 
 interface Project {
 	title: string;
@@ -29,6 +30,23 @@ const projects: Array<Project> = [
 		link: "https://github.com/kanatti/pretty",
 	},
 ];
+
+const socialLinks: Array<{
+	name: string;
+	friendlyName: string;
+	link: string;
+}> = [
+	{
+		name: "mdi:github",
+		friendlyName: "Github",
+		link: "https://github.com/kanatti",
+	},
+	{
+		name: "mdi:twitter",
+		friendlyName: "Twitter",
+		link: "https://twitter.com/bkanattil",
+	},
+];
 ---
 
 <PageLayout title="Home • Balagopal Kanattil">
@@ -44,6 +62,26 @@ const projects: Array<Project> = [
 		</br></br>
 		    Outside of tech, I enjoy spending time bouldering or cooking. I am also a big fan of horror, particularly the works of Junji Ito and H.P. Lovecraft.
 		</p>
+		<div class="mt-8 flex flex-wrap gap-x-2 items-center">
+			<p>Find me on</p>
+			<ul class="flex flex-1 items-center gap-x-1 sm:flex-initial">
+				{
+					socialLinks.map(({ link, name, friendlyName }) => (
+						<li class="flex">
+							<a
+								class="inline-block p-1 sm:hover:text-link"
+								href={link}
+								target="_blank"
+								rel={`noopener noreferrer`}
+							>
+								<Icon class="h-6 w-6" name={name} aria-hidden="true" focusable="false" />
+								<span class="sr-only">{friendlyName}</span>
+							</a>
+						</li>
+					))
+				}
+			</ul>
+		</div>		
 	</section>
 	<section class="mt-16">
 		<h2 class="text-xl font-semibold text-accent-2 mb-4">Posts</h2>
