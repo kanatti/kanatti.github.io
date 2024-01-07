@@ -9,11 +9,15 @@ export const menuLinks: Array<MenuLink> =  [
         path: "/",
     },
     {
-		title: "About",
-		path: "/about/",
+		title: "Tech",
+		path: "/tech/",
 	},
 	{
-		title: "Blog",
-		path: "/posts/",
+		title: "Climbing",
+		path: "/climbing/",
+	},
+    {
+		title: "Cooking",
+		path: "/cooking/",
 	},
 ]
