@@ -17,7 +17,7 @@ export const menuLinks: Array<MenuLink> =  [
 		path: "/climbing/",
 	},
     {
-		title: "Cooking",
-		path: "/cooking/",
+		title: "Reading",
+		path: "/reading/",
 	},
 ]
