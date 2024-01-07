@@ -1,7 +1,85 @@
 ---
 import PageLayout from "../layouts/Page.astro";
+
+interface Project {
+	title: string;
+	description: string;
+	link: string;
+}
+
+const projects: Array<Project> = [
+	{
+		title: "FlarePen",
+		description: "Web based editor for sketching ASCII diagrams.",
+		link: "https://github.com/flarepen/flarepen",
+	},
+	{
+		title: "YarDB",
+		description: "An experimental analytics database written in Rust.",
+		link: "https://github.com/kanatti/YarDB",
+	},
+	{
+		title: "lucene-utils",
+		description: "Utilities to work with lucene index files.",
+		link: "https://github.com/kanatti/lucene-utils",
+	},
+	{
+		title: "Pretty",
+		description: "Command line utility to view prettified files.",
+		link: "https://github.com/kanatti/pretty",
+	},
+];
 ---
 
 <PageLayout title="Home • Balagopal Kanattil">
-	<main></main>
+	<section>
+		<h1 class="mb-6">Hi, I'm Bala.</h1>
+		<p class="mb-4 leading-6">
+			I'm a self-taught developer with a formal education in Physics from
+			IIT Bombay. Currently, I work as a Software Engineer at Amazon. This
+			is my personal blog where I write about different projects I'm
+			working on. My current interests are Databases and Distributed
+			Systems, though I occasionally delve into User Interfaces and
+			Design.
+		</p>
+	</section>
+	<section class="mt-16">
+		<h2 class="text-xl font-semibold text-accent-2 mb-4">Posts</h2>
+		Coming Soon ...
+	</section>
+	<section class="mt-16">
+		<h2 class="text-xl font-semibold text-accent-2 mb-4">Projects</h2>
+		<ul class="space-y-4 sm:space-y-2">
+			{
+				projects.map((project) => (
+					<>
+						<li>
+							<a
+								href={project.link}
+								target="_blank"
+								rel="noopener noreferrer"
+								class="inline-block project-link"
+							>
+								{project.title}
+							</a>
+							:
+							<p class="inline-block sm:mt-2">
+								{project.description}
+							</p>
+						</li>
+					</>
+				))
+			}
+		</ul>
+	</section>
+	<section class="mt-32 text-xs">
+		This blog theme is inspired from <a
+			href="https://github.com/chrismwilliams/astro-theme-cactus"
+			target="_blank"
+			rel="noopener noreferrer"
+			class="inline-block project-link"
+		>
+			astro-cactus-theme
+		</a>.
+	</section>
 </PageLayout>
