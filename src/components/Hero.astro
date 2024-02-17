@@ -22,10 +22,9 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 
 {
 	data.coverImage && (
-		<div class="aspect-h-9 aspect-w-16 mb-6">
+		<div>
 			<Image
 				alt={data.coverImage.alt}
-				class="object-cover"
 				fetchpriority="high"
 				loading="eager"
 				src={data.coverImage.src}
@@ -33,13 +32,16 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 		</div>
 	)
 }
-{data.draft ? <span class="text-base text-red-500">(Draft)</span> : null}
-<h1 class="title mb-3 sm:mb-1">
+{data.draft ? <span>(Draft)</span> : null}
+<h1>
 	{data.title}
 </h1>
-<div class="flex flex-wrap items-center gap-x-3 gap-y-2">
-	<p class="font-semibold">
-		<FormattedDate date={data.publishDate} dateTimeOptions={dateTimeOptions} />
+<div>
+	<p>
+		<FormattedDate
+			date={data.publishDate}
+			dateTimeOptions={dateTimeOptions}
+		/>
 	</p>
 </div>
 {
@@ -66,10 +68,12 @@ const dateTimeOptions: Intl.DateTimeFormatOptions = {
 				<>
 					<a
 						aria-label={`View more blogs with the tag ${tag}`}
-						class="cactus-link inline-block before:content-['#']"
 						data-pagefind-filter="tag"
 						href={`/tags/${tag}/`}
-					>{tag}</a>{i < data.tags.length - 1 && ", "}
+					>
+						{tag}
+					</a>
+					{i < data.tags.length - 1 && ", "}
 				</>
 			))}
 		</div>
