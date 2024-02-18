@@ -1,0 +1,25 @@
+---
+import type { CollectionEntry } from "astro:content";
+
+const { post } = Astro.props;
+
+const {
+    data: { title, description, previewImage, publishDate, updateDate },
+    slug,
+} = post;
+
+console.log(previewImage);
+---
+
+<a href={`posts/${slug}`} class="flex max-w-48rem">
+    <div class="flex max-w-48rem">
+        <img
+            class="w-64 mr-6 border border-slate-800 rounded-sm p-4"
+            src={previewImage}
+        />
+        <div class="flex-col items-center">
+            <div class="text-2xl mb-4">{title}</div>
+            <div class="text-xl">{description}</div>
+        </div>
+    </div>
+</a>

@@ -9,7 +9,8 @@ export default {
 				"gray-95": "#F2F2F2"
 			},
 			spacing: {
-				"128": "36rem"
+				"36rem": "36rem",
+				"48rem": "48rem"
 			}
 		},
 	},
