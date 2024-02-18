@@ -23,7 +23,5 @@
         font-family: "crimson", system-ui, sans-serif;
     }
 
-    html body {
-        @apply antialiased;
-    }
+    html body {}
 }
