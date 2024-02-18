@@ -7,5 +7,10 @@ import mdx from "@astrojs/mdx";
 // https://astro.build/config
 export default defineConfig({
   site: 'https://kanatti.github.io',
-  integrations: [tailwind(), icon(), mdx()]
+  integrations: [tailwind(), icon(), mdx()],
+  markdown: {
+    shikiConfig: {
+      theme: "poimandres"
+    }
+  }
 });

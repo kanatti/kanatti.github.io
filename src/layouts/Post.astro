@@ -22,7 +22,7 @@ const classes = [
 	// h1
 	"prose-h1:text-4xl prose-h1:border-b prose-h1:border-slate-700",
 	// h2
-	"prose-h2:text-3xl",
+	"prose-h2:text-3xl prose-h2:inline-block prose-h2:border-b prose-h2:border-slate-700",
 	// h3
 	"prose-h3:text-2xl",
 	// h4
@@ -33,9 +33,15 @@ const classes = [
 	"prose-ol:text-lg prose-ol:text-slate-950",
 	// ul
 	"prose-ul:text-lg prose-ul:text-slate-950",
+	// li
+	"prose-li:my-1",
+	// code
+	"prose-code:text-sm prose-code:before:hidden prose-code:after:hidden",
+	// code block
+	"prose-pre:rounded-sm",
 ];
 
-const articleClasses = clsx(classes, "prose-p:text-lg  ");
+const articleClasses = clsx(classes, "prose-pre:rounded-smt");
 ---
 
 <div class="text-slate-950 mx-24 my-12">
