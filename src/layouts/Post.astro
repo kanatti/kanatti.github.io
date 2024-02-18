@@ -1,5 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
+import clsx from "clsx";
 
 interface Props {
 	post: CollectionEntry<"post">;
@@ -12,52 +13,33 @@ const {
 } = post;
 const socialImage = ogImage ?? `/og-image/${slug}.png`;
 const { headings } = await post.render();
+
+const classes = [
+	// Setup Prose
+	"prose prose-slate lg:prose-xl",
+	// all headings
+	"prose-headings:font-normal",
+	// h1
+	"prose-h1:text-4xl prose-h1:border-b prose-h1:border-slate-700",
+	// h2
+	"prose-h2:text-3xl",
+	// h3
+	"prose-h3:text-2xl",
+	// h4
+	"prose-h4:text-xl",
+	// p
+	"prose-p:text-lg prose-p:text-slate-950",
+	// ol
+	"prose-ol:text-lg prose-ol:text-slate-950",
+	// ul
+	"prose-ul:text-lg prose-ul:text-slate-950",
+];
+
+const articleClasses = clsx(classes, "prose-p:text-lg  ");
 ---
 
-<div title={title}>
-	<div class="">
-		<article class="" data-pagefind-body>
-			<div class="">
-				<slot />
-			</div>
-		</article>
-	</div>
-	<button aria-label="Back to Top" class="" data-show="false" id="to-top-btn"
-		><svg
-			aria-hidden="true"
-			class="h-6 w-6"
-			fill="none"
-			focusable="false"
-			stroke="currentColor"
-			stroke-width="2"
-			viewBox="0 0 24 24"
-			xmlns="http://www.w3.org/2000/svg"
-		>
-			<path
-				d="M4.5 15.75l7.5-7.5 7.5 7.5"
-				stroke-linecap="round"
-				stroke-linejoin="round"></path>
-		</svg>
-	</button>
+<div class="text-slate-950 mx-24 my-12">
+	<article class={articleClasses}>
+		<slot />
+	</article>
 </div>
-
-<script>
-	const scrollBtn = document.getElementById(
-		"to-top-btn",
-	) as HTMLButtonElement;
-	const targetHeader = document.getElementById("blog-hero") as HTMLDivElement;
-
-	function callback(entries: IntersectionObserverEntry[]) {
-		entries.forEach((entry) => {
-			// only show the scroll to top button when the heading is out of view
-			scrollBtn.dataset.show = (!entry.isIntersecting).toString();
-		});
-	}
-
-	scrollBtn.addEventListener("click", () => {
-		document.documentElement.scrollTo({ behavior: "smooth", top: 0 });
-	});
-
-	const observer = new IntersectionObserver(callback);
-	observer.observe(targetHeader);
-</script>
