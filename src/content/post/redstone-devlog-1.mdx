@@ -9,7 +9,10 @@ draft: false
 
 # {frontmatter.title}
 
+> This post is currently in a draft state.
+
 Redstone is a new learning project I started about a week back. Goal is to implement a language server for Java in Rust and a vscode extension along with it. I will be writing regular dev-logs about the progress on the project, this being the first one.
+
 
 ## Why Redstone?
 
@@ -32,6 +35,10 @@ Alright, so let’s look at what progress has been made till now.
 
 
 Language Server Protocol (LSP) standardises how editors talk to a language-server.
+
+![LSP Overview](../images/lsp-overview.png)
+
+[^ Diagram from VSCode Documentation](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide)
 
 It uses `JSONRPC` protocol. We will cover more of LSP in a later post, though some very basic concepts to get us started with are:
 
@@ -178,3 +185,5 @@ pub enum ImportDeclaration {
 Java UnGrammar is added here - https://github.com/redstone-org/redstone/blob/main/crates/syntax/java.ungram
 
 ## What’s next?
+
+TBA
