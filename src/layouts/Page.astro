@@ -16,11 +16,11 @@ const { title, description } = Astro.props;
     <head>
         <SiteMeta title={title} description={description} />
     </head>
-    <body>
-        <Header />
+    <body class="bg-gray-95 text-gray-darkest">
+        <!-- <Header /> -->
         <main id="main">
             <slot />
         </main>
-        <Footer />
+        <!-- <Footer /> -->
     </body>
 </html>

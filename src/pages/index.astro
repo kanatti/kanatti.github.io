@@ -38,83 +38,117 @@ const socialLinks: Array<{
 }> = [
 	{
 		name: "mdi:github",
-		friendlyName: "Github",
+		friendlyName: "@kanatti",
 		link: "https://github.com/kanatti",
 	},
 	{
 		name: "mdi:twitter",
-		friendlyName: "Twitter",
+		friendlyName: "@bkanattil",
 		link: "https://twitter.com/bkanattil",
+	},
+	{
+		name: "mdi:email",
+		friendlyName: "balukanattil@gmail.com",
+		link: "mailto:balukanattil@gmail.com",
 	},
 ];
 ---
 
 <PageLayout title="Home • Balagopal Kanattil">
-	<section>
-		<h1>Hi, I'm Bala.</h1>
-		<p>
-			I'm a self-taught developer with a formal education in Physics from
-			IIT Bombay. Currently, I work as a Software Engineer at Amazon. This
-			is my personal blog where I write about different projects I'm
-			working on. My current interests are Databases and Distributed
-			Systems, though I occasionally delve into User Interfaces and
-			Design.
-		</p>
-	</section>
-	Outside of tech, I enjoy spending time bouldering or cooking. I am also a big
-	fan of horror, particularly the works of Junji Ito and H.P. Lovecraft.
+	<div class="w-full text-slate-950">
+		<!-- about me -->
+		<div
+			class="mx-8 my-8 px-4 py-4 lg:fixed lg:flex-auto lg:w-128 lg:inset-y-0 lg:items-start lg:overflow-y-auto"
+		>
+			<h1 class="text-3xl inline-block border-b border-slate-700 mb-4">
+				Balagopal Kanattil Shaji
+			</h1>
+			<p class="text-2xl mb-10">
+				I'm Bala - A physicist turned Software Engineer, with a passion
+				for Databases and Distributed Systems.
+			</p>
+			<div class="mb-6">
+				<div
+					class="text-2xl inline-block border-b border-slate-700 mb-4"
+				>
+					More about me
+				</div>
+				<p class="text-xl mb-2">
+					I'm a self-taught developer with a formal education in
+					Physics from IIT Bombay. Currently, I work as a Software
+					Engineer at Amazon. My current interests are Databases and
+					Distributed Systems, though I occasionally delve into User
+					Interfaces and Design.
+				</p>
+				<p class="text-xl">
+					Outside of tech, I enjoy spending time bouldering or
+					cooking. I am also a big fan of horror, particularly the
+					works of Junji Ito and H.P. Lovecraft.
+				</p>
+			</div>
+			<div class="mb-6">
+				<div
+					class="text-2xl inline-block border-b border-slate-700 mb-4"
+				>
+					Projects
+				</div>
+				<ul class="text-xl">
+					{
+						projects.map((project) => (
+							<>
+								<li class="mb-2">
+									<a
+										href={project.link}
+										target="_blank"
+										rel="noopener noreferrer"
+										class=" inline-block text-green-700 hover:text-green-800"
+									>
+										{project.title}
+									</a>
+									:
+									<p class="inline-block">
+										{project.description}
+									</p>
+								</li>
+							</>
+						))
+					}
+				</ul>
+			</div>
+			<div class="mb-6">
+				<div
+					class="text-2xl inline-block border-b border-slate-700 mb-4"
+				>
+					Contact
+				</div>
+				<ul class="text-xl">
+					{
+						socialLinks.map(({ link, name, friendlyName }) => (
+							<li class="mb-2">
+								<a
+									href={link}
+									target="_blank"
+									rel={`noopener noreferrer`}
+									class="flex items-center"
+								>
+									<Icon
+										name={name}
+										aria-hidden="true"
+										focusable="false"
+										class="inline-block w-6 h-6"
+									/>
+									<div class="px-2 inline-block">
+										{friendlyName}
+									</div>
+								</a>
+							</li>
+						))
+					}
+				</ul>
+			</div>
+		</div>
+		<div class="mx-8 my-8 px-4 py-4 lg:relative lg:ml-128">
+			<div class="text-2xl">Articles</div>
+		</div>
+	</div>
 </PageLayout>
-<div>
-	<p>Find me on</p>
-	<ul>
-		{
-			socialLinks.map(({ link, name, friendlyName }) => (
-				<li>
-					<a href={link} target="_blank" rel={`noopener noreferrer`}>
-						<Icon
-							name={name}
-							aria-hidden="true"
-							focusable="false"
-						/>
-						<span>{friendlyName}</span>
-					</a>
-				</li>
-			))
-		}
-	</ul>
-</div>
-
-<section>
-	<h2>Posts</h2>
-	Coming Soon ...
-</section>
-<section>
-	<h2>Projects</h2>
-	<ul>
-		{
-			projects.map((project) => (
-				<>
-					<li>
-						<a
-							href={project.link}
-							target="_blank"
-							rel="noopener noreferrer"
-						>
-							{project.title}
-						</a>
-						:<p>{project.description}</p>
-					</li>
-				</>
-			))
-		}
-	</ul>
-</section>
-<section>
-	This blog theme is inspired from <a
-		href="https://github.com/chrismwilliams/astro-theme-cactus"
-		target="_blank"
-		rel="noopener noreferrer"
-	>
-		astro-cactus-theme
-	</a>.
-</section>

@@ -6,7 +6,11 @@ export default {
 	theme: {
 		extend: {
 			colors: {
+				"gray-95": "#F2F2F2"
 			},
+			spacing: {
+				"128": "34rem"
+			}
 		},
 	},
 	plugins: [
