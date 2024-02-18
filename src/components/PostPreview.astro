@@ -1,14 +1,10 @@
 ---
-import type { CollectionEntry } from "astro:content";
-
 const { post } = Astro.props;
 
 const {
     data: { title, description, previewImage, publishDate, updateDate },
     slug,
 } = post;
-
-console.log(previewImage);
 ---
 
 <a href={`posts/${slug}`} class="flex max-w-48rem">

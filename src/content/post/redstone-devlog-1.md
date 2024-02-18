@@ -1,7 +1,7 @@
 ---
 title: "Redstone Dev-Log #1"
 description: "Updates on Redstone Project - A Java Language Server implemented in Rust. Covers initial project setup, code generation and ungrammar."
-previewImage: "src/content/preview/redstone-devlog-1.png"
+previewImage: "/previews/redstone-devlog-1.png"
 publishDate: "16 Feb 2024"
 tags: ["language-server", "redstone", "rust", "java"]
 draft: false
