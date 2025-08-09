@@ -7,45 +7,74 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const {
-	data: { description, ogImage, publishDate, title, updatedDate },
-	slug,
-} = post;
-const socialImage = ogImage ?? `/og-image/${slug}.png`;
-const { headings } = await post.render();
 
 const classes = [
 	// Setup Prose
-	"prose prose-slate lg:prose-xl",
+	"prose prose-slate max-w-none",
 	// all headings
-	"prose-headings:font-normal",
+	"prose-headings:font-normal prose-headings:text-ink prose-headings:mt-8 prose-headings:mb-4",
 	// h1
-	"prose-h1:text-4xl prose-h1:border-b prose-h1:border-slate-700",
+	"prose-h1:text-3xl prose-h1:mt-0 prose-h1:mb-6",
 	// h2
-	"prose-h2:text-3xl prose-h2:inline-block prose-h2:border-b prose-h2:border-slate-700",
+	"prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4",
 	// h3
-	"prose-h3:text-2xl",
+	"prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
 	// h4
-	"prose-h4:text-xl",
+	"prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-2",
 	// p
-	"prose-p:text-lg prose-p:text-slate-950",
+	"prose-p:text-xl prose-p:text-ink prose-p:mb-4",
 	// ol
-	"prose-ol:text-lg prose-ol:text-slate-950",
+	"prose-ol:text-xl prose-ol:text-ink prose-ol:mb-4",
 	// ul
-	"prose-ul:text-lg prose-ul:text-slate-950",
+	"prose-ul:text-xl prose-ul:text-ink prose-ul:mb-4",
 	// li
-	"prose-li:my-1",
+	"prose-li:my-1 prose-li:text-ink",
+	// links
+	"prose-a:text-ink prose-a:underline prose-a:decoration-1 hover:prose-a:decoration-2",
 	// code
-	"prose-code:text-sm prose-code:before:hidden prose-code:after:hidden",
+	"prose-code:text-xs prose-code:before:hidden prose-code:after:hidden",
 	// code block
-	"prose-pre:rounded-sm",
+	"prose-pre:rounded-sm prose-pre:text-xs prose-pre:leading-normal prose-pre:py-3 prose-pre:px-4 prose-pre:mb-4",
+	// blockquotes
+	"prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-ink-light prose-blockquote:mb-4",
 ];
 
-const articleClasses = clsx(classes, "prose-pre:rounded-smt");
+const articleClasses = clsx(classes);
 ---
 
-<div class="text-slate-950 mx-4 my-4 lg:mx-24 lg:my-12">
-	<article class={articleClasses}>
-		<slot />
-	</article>
+<style>
+	html {
+		scroll-behavior: smooth;
+	}
+</style>
+
+<div
+	class="max-w-7xl mx-auto px-6 pt-6 pb-12 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8"
+>
+	<!-- Main Content Area -->
+	<div class="max-w-none">
+		<header class="mb-8">
+			<nav class="flex space-x-6 mb-2">
+				<a href="/" class="text-ink hover:underline text-lg">Home</a>
+				<a href="/blog" class="text-ink hover:underline text-lg">Blog</a
+				>
+				<a href="/projects" class="text-ink hover:underline text-lg"
+					>Projects</a
+				>
+			</nav>
+			<hr class="border-gray-600 mb-8" />
+		</header>
+
+		<article
+			class={`${articleClasses} relative`}
+			style="counter-reset: sidenote-counter;"
+		>
+			<slot />
+		</article>
+	</div>
+
+	<!-- Sidenotes Area -->
+	<aside class="hidden lg:block">
+		<!-- Sidenotes will be positioned here via CSS -->
+	</aside>
 </div>

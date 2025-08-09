@@ -7,127 +7,79 @@ tags: ["language-server", "redstone", "rust", "java"]
 draft: false
 ---
 
+import SideNote from "../../components/SideNote.astro";
+import PostMeta from "../../components/PostMeta.astro";
+
 # {frontmatter.title}
+
+<PostMeta date={frontmatter.publishDate} tags={frontmatter.tags} />
 
 > This post is currently in a draft state.
 
-Redstone is a new learning project I started about a week back. Goal is to implement a language server for Java in Rust and a vscode extension along with it. I will be writing regular dev-logs about the progress on the project, this being the first one.
-
+Redstone is a new learning project I started about a week back. The goal is to implement a language server for Java in Rust, along with a VSCode extension to support it. I plan to write regular dev-logs about the progress, and this is the very first one.
 
 ## Why Redstone?
 
-Because I am both curious and bored. I plan to deep dive and learn about a bunch of things through this project:
-1. Internals of `rust-analyzer`, as a reference implementation of language server in `Rust`.
-2. Internals of `eclipse.jdt.ls`, as a reference implementation of language server for `Java`.
-3. On parsers, abstract-syntax-trees, concrete-syntax-grees, grammars and all sorts of fun things related to building a semantic model out of raw source code.
-4. Error resilient parsing and full-fidelity syntax trees which mainly show up in code editors.
-5. Some serious hands on with Rust - especially writing large projects, performance and memory optimizations, common patterns.
-6. Deeper understanding of Language Server Protocol.
-7. On writing a VSCode extension.
-8. Semantic Analysis of `Java`
+The short answer is because I am both curious and bored. Through this project, I plan to explore the internals of `rust-analyzer` as a reference implementation of a language server in Rust, and `eclipse.jdt.ls` as a reference for a Java language server. I also want to learn more about parsers, abstract syntax trees (ASTs), concrete syntax trees (CSTs), grammars, and the process of building a semantic model out of raw source code. Error-resilient parsing and full-fidelity syntax trees—common in code editors—are another area I intend to study.
 
-I would be really happy if I can get through all of the above even if the project doesn’t end up as production ready.
+This will be an opportunity to get serious hands-on experience with Rust, especially in writing large projects, performance and memory optimizations, and learning common patterns. I also aim to deepen my understanding of the Language Server Protocol, figure out how to write a VSCode extension, and implement semantic analysis for Java. Even if the project never becomes production-ready, I'll consider it a success if I manage to learn all of the above.
 
-
-Alright, so let’s look at what progress has been made till now.
+With that in mind, let's look at what's been done so far.
 
 ## Basics of LSP
 
-
-Language Server Protocol (LSP) standardises how editors talk to a language-server.
+The Language Server Protocol (LSP) standardises how editors communicate with a language server.
 
 ![LSP Overview](../images/lsp-overview.png)
 
 [^ Diagram from VSCode Documentation](https://code.visualstudio.com/api/language-extensions/language-server-extension-guide)
 
-It uses `JSONRPC` protocol. We will cover more of LSP in a later post, though some very basic concepts to get us started with are:
+<SideNote id="lsp-overview">The official LSP specification provides comprehensive details about message types, capabilities negotiation, and protocol implementation. Essential reading for understanding how editors and language servers communicate. [Read the full specification](https://microsoft.github.io/language-server-protocol/overviews/lsp/overview/)</SideNote>
 
-1. There are three types of messages - Request, Response, Notification.
-2. Request and Response are tied with an Id
-3. Notification is more like an event, does not have a response.
-4. Requests support cancellation, through $/cancelRequest notification.
-5. There is a handshake process during the initialization, both client and server share the capabilities they support.
-
-Read More:
-https://microsoft.github.io/language-server-protocol/overviews/lsp/overview/
-
+It uses the `JSONRPC` protocol. While I will go deeper into LSP in a later post, some basic concepts are worth noting now. There are three types of messages—Request, Response, and Notification. Requests and Responses are tied together with an ID, while a Notification is more like an event and does not have a response. Requests support cancellation through the `$/cancelRequest` notification. Finally, there is a handshake process during initialization, where both the client and server share the capabilities they support.
 
 ## VSCode Extension
 
-### Progress made till now
-1. Boilerplate setup
-2. Extension starts a new language-client + language-server
-3. Language client sends requests to the language-server for editor events.
+<SideNote id="repo-link">The VSCode extension repository contains the TypeScript implementation of the language client, configuration files, and packaging setup. Browse the code to see how the extension integrates with VSCode's extension API. [View source code](https://github.com/redstone-org/redstone-code)</SideNote>
 
-https://github.com/redstone-org/redstone-code
+The VSCode extension now has its boilerplate setup, starts a new language client and language server, and sends requests from the client to the server in response to editor events.
 
-### On boilerplate and Language Client
-
-VSCode provides some tooling to generate the extension boilerplate - https://code.visualstudio.com/api/get-started/your-first-extension.
-
-The role extension here is to act as a language-client which will send requests to the language-server based on different editor events. We can use the LanguageClient implementation from vscode-languageclient/node package.
+VSCode provides tooling to generate extension boilerplate, as described in [their guide](https://code.visualstudio.com/api/get-started/your-first-extension). The extension here acts as a language client, sending requests to the language server based on editor events. This is done using the `LanguageClient` implementation from the `vscode-languageclient/node` package:
 
 ```ts
 let client = new LanguageClient(
-		"redstone",
-		"Redstone Java Language Server",
-		serverOptions,
-		clientOptions
+	"redstone",
+	"Redstone Java Language Server",
+	serverOptions,
+	clientOptions
 );
 ```
 
-### On Server Options
+The client is given `serverOptions`—in this case, an `Executable { command }` pointing to the `redstone-language-server` binary. For now, I've hardcoded the path to Cargo's build target for the server, but eventually the binary will be bundled with the extension. The client runs this command in a separate process and communicates with it via `stdio`.
 
-We can pass in an `Executable { command }` to the Language Client to start the language-server. Client will run this command in a separate process and communicate with it through `stdio`.
-
-In our case the command will be a path to `redstone-language-server` binary.  For now I hard code the path to Cargo build target for the language server, but later on we can bundle the binary along with the extension.
-
-### What does the Language Client do?
-
-Language Client will send requests like `textDocument/DidOpen` or `textDocument/DidChange` to the language-server. These requests are only sent if the same is supported by the server which is synced through serverCapabilities during the initial handshake process.
+Once connected, the Language Client sends requests such as `textDocument/DidOpen` or `textDocument/DidChange` to the language server. These are sent only if the server has indicated support for them in the `serverCapabilities` shared during the handshake.
 
 ## Redstone Language Server
 
-### Progress made till now
-1. A simple language server that accents events and logs the requests
-2. Some boilerplate for Abstract Syntax Tree (AST) and Concrete Syntax Tree (CST)
-3. Code generation for SyntaxKind
-4. Java UnGrammar based on Oracle Java Language Spec
-5. Partial Code generation of AstNodes
+The language server can now accept events and log the incoming requests. Some initial boilerplate is in place for AST and CST structures, code generation for `SyntaxKind`, and a Java UnGrammar based on the Oracle Java Language Specification. Partial code generation of AST nodes has also been implemented.
+
+The server is built using the `lsp-types` crate, which provides all the LSP types, and the `lsp-server` crate from rust-analyzer, which contains their own language server implementation. These make it easy to get a basic server running quickly. After initializing the stdio connection and completing the handshake, the server runs an event loop using Crossbeam channels and the `select!` macro to receive and handle messages. An exit notification will break this loop and shut down the server.
+
+## Abstract Syntax Tree and Concrete Syntax Tree
+
+This is a complex topic I will cover in depth in a future post. For now, it's worth noting that unlike compilers, editors and language servers require full-fidelity ASTs and error-resilient parsing. One approach is to use an untyped Concrete Syntax Tree and then layer an AST as a view on top of it. The `rowan` crate from rust-analyzer provides an efficient CST implementation that supports this.
 
 
-### Language Server and Event Loop
+## Java UnGrammar and Code Generation
 
-- lsp-types crate provides all the types for language server protocol
-- rust-analyzer has published the language server implementation in lsp-server crate.
-
-Using both these crates makes our life easier to implement the language server pretty quick.
-
-We initialize stdio connection first, then do the handshake. And start an EventLoop.
-
-Event loop use CrossBeam Channel and select! To receive a message and handle it. Exit Notification will exit the event loop and the language server.
-
-### Abstract Syntax Tree and Concrete Syntax Tree
-
-This is a complicated topic, I will cover this in depth in a future post.
-
-For starters:
-Unlike Compilers, Editors and Language Server requires full-fidelity ASTs and error resilient parsing.
-One approach to this is use a untyped Concrete Syntax Tree and layer AST as view on top of it.
-Rowan crate by rust-analyzer lets you do the same. It provides an efficient CST implementation.
-
-More details - 
-
-### Java UnGrammar and Code Generation
-
-UnGrammar from rust-analyzer lets you write your AST representation in an EBNF like format and then provides you programmatic access to it.
-
-This is useful for code generation of AST abstractions.
-
-For example:
+<SideNote id="ungram-link">This file defines the complete Java grammar in UnGrammar format, covering everything from basic expressions to complex language constructs. It serves as the foundation for generating AST node types and parsing logic. [View the Java UnGrammar](https://github.com/redstone-org/redstone/blob/main/crates/syntax/java.ungram)</SideNote>
 
 
-```
+UnGrammar from rust-analyzer lets you describe your AST in an EBNF-like format, then gives programmatic access to it. This is particularly useful for generating AST abstractions.
+
+For example, the Java UnGrammar defines:
+
+```text
 ImportDeclaration =
   SingleTypeImportDeclaration
 | TypeImportOnDemandDeclaration
@@ -147,43 +99,30 @@ StaticImportOnDemandDeclaration =
   'import' 'static' TypeName '.' '*' ';'
 ```
 
-
-
-In Ungrammar you get a node ImportDeclaration with a rule alt
+In UnGrammar, `ImportDeclaration` becomes a node with an `alt` rule:
 
 ```json
-  "ImportDeclaration": {
-    "alt": [
-      {
-        "node": "SingleTypeImportDeclaration"
-      },
-      {
-        "node": "TypeImportOnDemandDeclaration"
-      },
-      {
-        "node": "SingleStaticImportDeclaration"
-      },
-      {
-        "node": "StaticImportOnDemandDeclaration"
-      }
-    ]
-  }
+"ImportDeclaration": {
+  "alt": [
+    { "node": "SingleTypeImportDeclaration" },
+    { "node": "TypeImportOnDemandDeclaration" },
+    { "node": "SingleStaticImportDeclaration" },
+    { "node": "StaticImportOnDemandDeclaration" }
+  ]
+}
 ```
 
-Which can be use to generate a rust Enum to represent ImportDeclaration AstNode:
+This can be used to generate a Rust enum representing the `ImportDeclaration` AST node:
 
 ```rs
 pub enum ImportDeclaration {
-	SingleTypeImportDeclaration(SingleTypeImportDeclaration).
+	SingleTypeImportDeclaration(SingleTypeImportDeclaration),
 	TypeImportOnDemandDeclaration(TypeImportOnDemandDeclaration),
 	SingleStaticImportDeclaration(SingleStaticImportDeclaration),
 	StaticImportOnDemandDeclaration(StaticImportOnDemandDeclaration),
 }
 ```
 
-
-Java UnGrammar is added here - https://github.com/redstone-org/redstone/blob/main/crates/syntax/java.ungram
-
-## What’s next?
+## What's next?
 
 TBA

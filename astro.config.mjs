@@ -10,7 +10,7 @@ export default defineConfig({
   integrations: [tailwind(), icon(), mdx()],
   markdown: {
     shikiConfig: {
-      theme: "poimandres"
+      theme: "vitesse-light"
     }
   }
 });

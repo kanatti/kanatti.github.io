@@ -1,0 +1,33 @@
+---
+import Tag from "./Tag.astro";
+
+interface Props {
+    date: string;
+    tags: string[];
+}
+
+const { date, tags } = Astro.props;
+---
+
+<div
+    class="flex flex-wrap items-center gap-4 text-sm text-ink-light mb-8 -mt-4"
+>
+    <time datetime={date}>
+        {
+            new Date(date).toLocaleDateString("en-US", {
+                year: "numeric",
+                month: "long",
+                day: "numeric",
+            })
+        }
+    </time>
+    {
+        tags && tags.length > 0 && (
+            <div class="flex flex-wrap gap-2">
+                {tags.map((tag: string) => (
+                    <Tag tag={tag} href={`/blog/tag/${tag}`} />
+                ))}
+            </div>
+        )
+    }
+</div>

@@ -1,0 +1,32 @@
+---
+interface Props {
+    currentPage: "home" | "blog" | "projects";
+}
+
+const { currentPage } = Astro.props;
+---
+
+<header class="text-center mb-8">
+    <h1 class="text-4xl font-normal mb-4">Balagopal Kanattil Shaji</h1>
+    <nav class="flex justify-center space-x-6 mb-4">
+        <a
+            href="/"
+            class={`text-ink text-lg ${currentPage === "home" ? "underline" : "hover:underline"}`}
+        >
+            Home
+        </a>
+        <a
+            href="/blog"
+            class={`text-ink text-lg ${currentPage === "blog" ? "underline" : "hover:underline"}`}
+        >
+            Blog
+        </a>
+        <a
+            href="/projects"
+            class={`text-ink text-lg ${currentPage === "projects" ? "underline" : "hover:underline"}`}
+        >
+            Projects
+        </a>
+    </nav>
+    <hr class="border-gray-600 mb-8" />
+</header>

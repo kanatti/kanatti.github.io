@@ -1,21 +1,85 @@
 ---
-const { post } = Astro.props;
+import type { CollectionEntry } from "astro:content";
+import Tag from "./Tag.astro";
 
-const {
-    data: { title, description, previewImage, publishDate, updateDate },
-    slug,
-} = post;
+interface Props {
+    post: CollectionEntry<"post">;
+    variant?: "home" | "listing";
+}
+
+const { post, variant = "listing" } = Astro.props;
+
+// Format date function
+const formatDate = (dateString: string) => {
+    return new Date(dateString).toLocaleDateString("en-US", {
+        year: "numeric",
+        month: "long",
+        day: "numeric",
+    });
+};
+
+// Variant-specific classes
+const titleClasses = variant === "home" ? "text-xl" : "text-2xl font-normal";
+const containerClasses =
+    variant === "listing"
+        ? "border-b border-gray-200 pb-8 last:border-b-0"
+        : "";
+const wrapperElement = variant === "listing" ? "article" : "div";
 ---
 
-<a href={`posts/${slug}`} class="flex max-w-48rem">
-    <div class="flex max-w-48rem items-center">
-        <img
-            class="hidden lg:block w-64 mr-6 border border-slate-800 rounded-sm p-4"
-            src={previewImage}
-        />
-        <div class="flex-col items-center">
-            <div class="text-2xl mb-4">{title}</div>
-            <div class="text-xl">{description}</div>
-        </div>
-    </div>
-</a>
+<li class={containerClasses}>
+    {
+        variant === "listing" ? (
+            <article>
+                <div class="flex justify-between items-baseline mb-2">
+                    <h2 class={titleClasses}>
+                        <a
+                            href={`/blog/${post.slug}`}
+                            class="text-ink hover:underline hover:decoration-1"
+                        >
+                            {post.data.title}
+                        </a>
+                    </h2>
+                    <time
+                        datetime={post.data.publishDate}
+                        class="text-base text-ink-light ml-4 flex-shrink-0"
+                    >
+                        {formatDate(post.data.publishDate)}
+                    </time>
+                </div>
+                <p class="text-lg text-ink-light mb-3">
+                    {post.data.description}
+                </p>
+                {post.data.tags && post.data.tags.length > 0 && (
+                    <div class="flex flex-wrap gap-2">
+                        {post.data.tags.map((tag: string) => (
+                            <Tag tag={tag} href={`/blog/tag/${tag}`} />
+                        ))}
+                    </div>
+                )}
+            </article>
+        ) : (
+            <div>
+                <div class="flex justify-between items-baseline">
+                    <h3 class={titleClasses}>
+                        <a
+                            href={`/blog/${post.slug}`}
+                            class="text-ink hover:underline hover:decoration-1"
+                        >
+                            {post.data.title}
+                        </a>
+                    </h3>
+                    <time
+                        datetime={post.data.publishDate}
+                        class="text-base text-ink-light ml-4 flex-shrink-0"
+                    >
+                        {formatDate(post.data.publishDate)}
+                    </time>
+                </div>
+                <p class="mt-2 text-lg text-ink-light">
+                    {post.data.description}
+                </p>
+            </div>
+        )
+    }
+</li>

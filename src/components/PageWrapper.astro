@@ -1,0 +1,16 @@
+---
+import SiteHeader from "./SiteHeader.astro";
+
+interface Props {
+    currentPage: "home" | "blog" | "projects";
+}
+
+const { currentPage } = Astro.props;
+---
+
+<div class="bg-paper text-ink font-serif max-w-2xl mx-auto px-6 py-12">
+    <SiteHeader currentPage={currentPage} />
+    <main>
+        <slot />
+    </main>
+</div>

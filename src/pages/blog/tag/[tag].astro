@@ -1,0 +1,85 @@
+---
+import type { GetStaticPaths } from "astro";
+import PageLayout from "../../../layouts/Page.astro";
+import PageWrapper from "../../../components/PageWrapper.astro";
+import PostPreview from "../../../components/PostPreview.astro";
+import { getAllPosts, sortMDByDate, getUniqueTags } from "../../../utils";
+
+export const getStaticPaths = (async () => {
+    const allPosts = await getAllPosts();
+    const tags = getUniqueTags(allPosts);
+
+    return tags.map((tag) => {
+        const tagPosts = allPosts.filter(
+            (post) => post.data.tags && post.data.tags.includes(tag),
+        );
+        const sortedPosts = sortMDByDate(tagPosts);
+
+        return {
+            params: { tag },
+            props: {
+                posts: sortedPosts.slice(0, 8), // First 8 posts
+                tag,
+                totalPosts: sortedPosts.length,
+                hasMore: sortedPosts.length > 8,
+            },
+        };
+    });
+}) satisfies GetStaticPaths;
+
+interface Props {
+    posts: any[];
+    tag: string;
+    totalPosts: number;
+    hasMore: boolean;
+}
+
+const { posts, tag, totalPosts, hasMore } = Astro.props;
+
+const pageTitle = `Posts tagged "${tag}"`;
+---
+
+<PageLayout title={pageTitle}>
+    <PageWrapper currentPage="blog">
+        <div class="mb-8">
+            <h2 class="text-2xl font-normal mb-2">Posts tagged "{tag}"</h2>
+            <p class="text-ink-light">
+                {totalPosts} post{totalPosts !== 1 ? "s" : ""} found
+            </p>
+        </div>
+
+        <section aria-label="Tagged blog posts">
+            <ul class="space-y-8">
+                {
+                    posts.map((post) => (
+                        <PostPreview post={post} variant="listing" />
+                    ))
+                }
+            </ul>
+        </section>
+
+        {/* Pagination for more posts */}
+        {
+            hasMore && (
+                <div class="text-center mt-12 pt-8 border-t border-gray-200">
+                    <a
+                        href={`/blog/tag/${tag}/2`}
+                        class="text-ink hover:underline text-lg"
+                    >
+                        View more posts tagged "{tag}" →
+                    </a>
+                </div>
+            )
+        }
+
+        {/* Back to blog link */}
+        <div class="text-center mt-8">
+            <a
+                href="/blog"
+                class="text-ink-light hover:text-ink hover:underline"
+            >
+                ← Back to all posts
+            </a>
+        </div>
+    </PageWrapper>
+</PageLayout>

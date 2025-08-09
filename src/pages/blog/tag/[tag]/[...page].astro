@@ -1,0 +1,118 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import PageLayout from "../../../../layouts/Page.astro";
+import PageWrapper from "../../../../components/PageWrapper.astro";
+import PostPreview from "../../../../components/PostPreview.astro";
+import { getAllPosts, sortMDByDate, getUniqueTags } from "../../../../utils";
+
+export const getStaticPaths = (async ({ paginate }) => {
+    const allPosts = await getAllPosts();
+    const tags = getUniqueTags(allPosts);
+
+    const paths: any[] = [];
+
+    for (const tag of tags) {
+        const tagPosts = allPosts.filter(
+            (post) => post.data.tags && post.data.tags.includes(tag),
+        );
+        const sortedPosts = sortMDByDate(tagPosts);
+
+        // Only create paginated routes if there are more than 8 posts
+        if (sortedPosts.length > 8) {
+            const paginatedPaths = paginate(sortedPosts, {
+                pageSize: 8,
+                params: { tag },
+                props: { tag },
+            });
+            paths.push(...paginatedPaths);
+        }
+    }
+
+    return paths;
+}) satisfies GetStaticPaths;
+
+interface Props {
+    page: Page<CollectionEntry<"post">>;
+    tag: string;
+}
+
+const { page, tag } = Astro.props;
+
+const pageTitle = `Posts tagged "${tag}" - Page ${page.currentPage}`;
+---
+
+<PageLayout title={pageTitle}>
+    <PageWrapper currentPage="blog">
+        <div class="mb-8">
+            <h2 class="text-2xl font-normal mb-2">Posts tagged "{tag}"</h2>
+            <p class="text-ink-light">
+                Page {page.currentPage} of {page.lastPage}
+            </p>
+        </div>
+
+        <section aria-label="Tagged blog posts">
+            <ul class="space-y-8">
+                {
+                    page.data.map((post) => (
+                        <PostPreview post={post} variant="listing" />
+                    ))
+                }
+            </ul>
+        </section>
+
+        {/* Pagination */}
+        {
+            (page.url.prev || page.url.next) && (
+                <nav
+                    class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200"
+                    aria-label="Pagination"
+                >
+                    <div>
+                        {page.url.prev ? (
+                            <a
+                                href={page.url.prev}
+                                class="text-ink hover:underline text-lg"
+                                rel="prev"
+                            >
+                                ← Previous
+                            </a>
+                        ) : (
+                            <span class="text-ink-light text-lg">
+                                ← Previous
+                            </span>
+                        )}
+                    </div>
+
+                    <div class="text-ink-light">
+                        Page {page.currentPage} of {page.lastPage}
+                    </div>
+
+                    <div>
+                        {page.url.next ? (
+                            <a
+                                href={page.url.next}
+                                class="text-ink hover:underline text-lg"
+                                rel="next"
+                            >
+                                Next →
+                            </a>
+                        ) : (
+                            <span class="text-ink-light text-lg">Next →</span>
+                        )}
+                    </div>
+                </nav>
+            )
+        }
+
+        {/* Back to blog link */}
+        <div class="text-center mt-8">
+            <a
+                href="/blog"
+                class="text-ink-light hover:text-ink hover:underline"
+            >
+                ← Back to all posts
+            </a>
+        </div>
+    </PageWrapper>
+</PageLayout>

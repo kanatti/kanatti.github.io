@@ -1,0 +1,36 @@
+---
+interface Props {
+    tag: string;
+    href?: string;
+    variant?: "default" | "active" | "subtle";
+    size?: "sm" | "xs";
+}
+
+const { tag, href, variant = "default", size = "xs" } = Astro.props;
+
+const baseClasses =
+    "px-2 py-1 rounded transition-colors no-underline decoration-none";
+const sizeClasses = size === "sm" ? "text-sm" : "text-xs";
+
+const variantClasses = {
+    default: "bg-gray-100 hover:bg-gray-200 text-ink hover:text-ink",
+    active: "bg-ink text-paper",
+    subtle: "bg-gray-100 text-ink-light",
+};
+
+const classes = `${baseClasses} ${sizeClasses} ${variantClasses[variant]}`;
+---
+
+{
+    href ? (
+        <a
+            href={href}
+            class={classes}
+            style="text-decoration: none !important;"
+        >
+            {tag}
+        </a>
+    ) : (
+        <span class={classes}>{tag}</span>
+    )
+}

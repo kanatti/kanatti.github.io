@@ -1,0 +1,81 @@
+---
+import type { GetStaticPaths, Page } from "astro";
+import type { CollectionEntry } from "astro:content";
+import PageLayout from "../../layouts/Page.astro";
+import PageWrapper from "../../components/PageWrapper.astro";
+import PostPreview from "../../components/PostPreview.astro";
+import { getAllPosts, sortMDByDate } from "../../utils";
+
+export const getStaticPaths = (async ({ paginate }) => {
+	const allPosts = await getAllPosts();
+	const allPostsByDate = sortMDByDate(allPosts);
+	return paginate(allPostsByDate, { pageSize: 8 });
+}) satisfies GetStaticPaths;
+
+interface Props {
+	page: Page<CollectionEntry<"post">>;
+}
+
+const { page } = Astro.props;
+
+const pageTitle =
+	page.currentPage === 1 ? "Blog" : `Blog - Page ${page.currentPage}`;
+---
+
+<PageLayout title={pageTitle}>
+	<PageWrapper currentPage="blog">
+		<section aria-label="Blog post list">
+			<ul class="space-y-8">
+				{
+					page.data.map((post) => (
+						<PostPreview post={post} variant="listing" />
+					))
+				}
+			</ul>
+		</section>
+
+		{/* Pagination */}
+		{
+			(page.url.prev || page.url.next) && (
+				<nav
+					class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200"
+					aria-label="Pagination"
+				>
+					<div>
+						{page.url.prev ? (
+							<a
+								href={page.url.prev}
+								class="text-ink hover:underline text-lg"
+								rel="prev"
+							>
+								← Previous
+							</a>
+						) : (
+							<span class="text-ink-light text-lg">
+								← Previous
+							</span>
+						)}
+					</div>
+
+					<div class="text-ink-light">
+						Page {page.currentPage} of {page.lastPage}
+					</div>
+
+					<div>
+						{page.url.next ? (
+							<a
+								href={page.url.next}
+								class="text-ink hover:underline text-lg"
+								rel="next"
+							>
+								Next →
+							</a>
+						) : (
+							<span class="text-ink-light text-lg">Next →</span>
+						)}
+					</div>
+				</nav>
+			)
+		}
+	</PageWrapper>
+</PageLayout>
