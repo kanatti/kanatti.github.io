@@ -33,7 +33,7 @@ export default {
 						'--tw-prose-links': theme('colors.accent'),
 						'--tw-prose-code': theme('colors.ink'),
 						'--tw-prose-quotes': theme('colors.ink-light'),
-						fontFamily: '"crimson", serif',
+						fontFamily: '"et-book", "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", "Georgia", "crimson", serif',
 						fontSize: '1.125rem', // 18px
 						lineHeight: '1.75', // Appropriate line height
 						maxWidth: '42rem', // Match content width
@@ -91,7 +91,7 @@ export default {
 				}
 			}),
 			fontFamily: {
-				serif: ['crimson', 'serif'],
+				serif: ['"et-book"', '"Palatino"', '"Palatino Linotype"', '"Palatino LT STD"', '"Book Antiqua"', '"Georgia"', '"crimson"', 'serif'],
 				mono: ['JetBrains Mono', 'monospace']
 			}
 		},
