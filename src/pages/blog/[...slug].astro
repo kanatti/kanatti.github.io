@@ -1,0 +1,16 @@
+---
+import PageLayout from "../../layouts/Page.astro";
+import PageWrapper from "../../components/PageWrapper.astro";
+import { getAllPosts } from "../../utils";
+
+export async function getStaticPaths() {
+	const posts = await getAllPosts();
+	return posts.map((post) => ({ params: { slug: post.slug } }));
+}
+---
+
+<PageLayout title="Moved">
+	<PageWrapper currentPage="posts">
+		<p class="text-lg">This page has moved. Browse all posts at <a href="/posts" class="text-ink underline">/posts</a>.</p>
+	</PageWrapper>
+</PageLayout>
