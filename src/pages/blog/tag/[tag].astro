@@ -42,9 +42,8 @@ const pageTitle = `Posts tagged "${tag}"`;
 <PageLayout title={pageTitle}>
     <PageWrapper currentPage="blog">
         <div class="mb-8">
-            <h2 class="text-2xl font-normal mb-2">Posts tagged "{tag}"</h2>
             <p class="text-ink-light">
-                {totalPosts} post{totalPosts !== 1 ? "s" : ""} found
+                Found {totalPosts} post{totalPosts !== 1 ? "s" : ""} tagged with "{tag}"
             </p>
         </div>
 
@@ -52,7 +51,7 @@ const pageTitle = `Posts tagged "${tag}"`;
             <ul class="space-y-8">
                 {
                     posts.map((post) => (
-                        <PostPreview post={post} variant="listing" />
+                        <PostPreview post={post} />
                     ))
                 }
             </ul>

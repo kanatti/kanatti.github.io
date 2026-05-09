@@ -35,13 +35,13 @@ const sortedPosts = posts.sort((a, b) => {
 		<PageWrapper currentPage="home">
 			<h1 class="text-3xl font-normal mb-8">Balagopal Kanattil Shaji</h1>
 			<section class="mb-8">
-				<p class="mb-4 text-lg sm:text-xl">
+				<p class="mb-4 text-base sm:text-lg">
 					Hi, I'm a self-taught developer with a formal education in
 					Physics from IIT Bombay. Currently, I work as a Software
 					Engineer at Amazon, focusing on Databases and Distributed
 					Systems.
 				</p>
-				<p class="text-lg sm:text-xl">
+				<p class="text-base sm:text-lg">
 					Outside of tech, I enjoy spending time bouldering or
 					cooking. I am also a big fan of horror, particularly the
 					works of Junji Ito and H.P. Lovecraft.
@@ -59,7 +59,7 @@ const sortedPosts = posts.sort((a, b) => {
 						sortedPosts
 							.slice(0, 2)
 							.map((post) => (
-								<PostPreview post={post} variant="home" />
+								<PostPreview post={post} />
 							))
 					}
 				</ul>

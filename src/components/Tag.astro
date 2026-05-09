@@ -6,7 +6,7 @@ interface Props {
     size?: "sm" | "xs";
 }
 
-const { tag, href, variant = "default", size = "xs" } = Astro.props;
+const { tag, href, variant = "default", size = "sm" } = Astro.props;
 
 const baseClasses =
     "px-2 py-1 rounded transition-colors no-underline decoration-none";

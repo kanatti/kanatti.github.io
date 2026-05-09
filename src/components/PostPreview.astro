@@ -1,13 +1,11 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import Tag from "./Tag.astro";
 
 interface Props {
     post: CollectionEntry<"post">;
-    variant?: "home" | "listing";
 }
 
-const { post, variant = "listing" } = Astro.props;
+const { post } = Astro.props;
 
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
@@ -16,67 +14,26 @@ const formatDate = (dateString: string) => {
         day: "numeric",
     });
 };
-
-const titleClasses = variant === "home" ? "text-xl" : "text-xl sm:text-2xl font-normal";
-const containerClasses =
-    variant === "listing"
-        ? "border-b border-gray-200 pb-8 last:border-b-0"
-        : "";
 ---
 
-<li class={containerClasses}>
-    {
-        variant === "listing" ? (
-            <article>
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2 gap-1">
-                    <h2 class={titleClasses}>
-                        <a
-                            href={`/blog/${post.slug}`}
-                            class="text-ink hover:underline hover:decoration-1"
-                        >
-                            {post.data.title}
-                        </a>
-                    </h2>
-                    <time
-                        datetime={post.data.publishDate}
-                        class="text-sm sm:text-base text-ink-light sm:ml-4 flex-shrink-0"
-                    >
-                        {formatDate(post.data.publishDate)}
-                    </time>
-                </div>
-                <p class="text-base sm:text-lg text-ink-light mb-3">
-                    {post.data.description}
-                </p>
-                {post.data.tags && post.data.tags.length > 0 && (
-                    <div class="flex flex-wrap gap-2">
-                        {post.data.tags.map((tag: string) => (
-                            <Tag tag={tag} href={`/blog/tag/${tag}`} />
-                        ))}
-                    </div>
-                )}
-            </article>
-        ) : (
-            <div>
-                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1">
-                    <h3 class={titleClasses}>
-                        <a
-                            href={`/blog/${post.slug}`}
-                            class="text-ink hover:underline hover:decoration-1"
-                        >
-                            {post.data.title}
-                        </a>
-                    </h3>
-                    <time
-                        datetime={post.data.publishDate}
-                        class="text-sm sm:text-base text-ink-light sm:ml-4 flex-shrink-0"
-                    >
-                        {formatDate(post.data.publishDate)}
-                    </time>
-                </div>
-                <p class="mt-2 text-base sm:text-lg text-ink-light">
-                    {post.data.description}
-                </p>
-            </div>
-        )
-    }
+<li>
+    <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1">
+        <h3 class="text-xl">
+            <a
+                href={`/blog/${post.slug}`}
+                class="text-ink hover:underline hover:decoration-1"
+            >
+                {post.data.title}
+            </a>
+        </h3>
+        <time
+            datetime={post.data.publishDate}
+            class="text-sm sm:text-base text-ink-light sm:ml-4 flex-shrink-0"
+        >
+            {formatDate(post.data.publishDate)}
+        </time>
+    </div>
+    <p class="mt-2 text-base text-ink-light">
+        {post.data.description}
+    </p>
 </li>

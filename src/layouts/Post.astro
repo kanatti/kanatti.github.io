@@ -16,7 +16,7 @@ const classes = [
 	// h1
 	"prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mt-0 prose-h1:mb-6",
 	// h2
-	"prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4",
+	"prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4",
 	// h3
 	"prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
 	// h4
@@ -32,11 +32,11 @@ const classes = [
 	// links
 	"prose-a:text-ink prose-a:underline prose-a:decoration-1 hover:prose-a:decoration-2",
 	// code
-	"prose-code:text-xs prose-code:before:hidden prose-code:after:hidden",
+	"prose-code:before:hidden prose-code:after:hidden prose-code:[font-size:0.875rem]",
 	// code block
-	"prose-pre:rounded-sm prose-pre:text-xs prose-pre:leading-normal prose-pre:py-3 prose-pre:px-4 prose-pre:mb-4",
+	"prose-pre:rounded-sm prose-pre:leading-normal prose-pre:py-3 prose-pre:px-4 prose-pre:mb-4 prose-pre:[font-size:0.875rem] prose-pre:bg-transparent",
 	// blockquotes
-	"prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-ink-light prose-blockquote:mb-4",
+	"prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-ink-light prose-blockquote:mb-4 prose-blockquote:py-0 prose-blockquote:my-4 prose-blockquote:[&>p]:my-0",
 ];
 
 const articleClasses = clsx(classes);
@@ -48,7 +48,7 @@ const articleClasses = clsx(classes);
 	}
 </style>
 
-<div class="max-w-[42rem] mx-auto px-4 sm:px-6 pt-6 pb-12 relative">
+<div class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pt-6 pb-12 relative">
 	<!-- Main Content Area -->
 	<div>
 		<header class="mb-8">

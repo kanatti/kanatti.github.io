@@ -1,0 +1,165 @@
+---
+title: "Diagram Test"
+description: "Testing ASCII diagrams, SVGs, and visual components."
+publishDate: "09 May 2026"
+tags: ["test"]
+draft: true
+---
+
+import SideNote from "../../components/SideNote.astro";
+import PostMeta from "../../components/PostMeta.astro";
+import AsciiDiagram from "../../components/AsciiDiagram.astro";
+
+# {frontmatter.title}
+
+<PostMeta date={frontmatter.publishDate} tags={frontmatter.tags} />
+
+This is a test post to see how diagrams look on the blog.
+
+## ASCII Diagrams
+
+Here's a B-Tree structure:
+
+<AsciiDiagram>
+{`
+  B-Tree (order 3):
+
+            ┌─────────┐
+            │   42    │
+            └────┬────┘
+         ┌───────┴───────┐
+    ┌────┴────┐     ┌────┴────┐
+    │  7  23  │     │  56  89 │
+    └────┬────┘     └────┬────┘
+    ┌──┬─┴─┬──┐    ┌──┬─┴─┬──┐
+    │  │   │  │    │  │   │  │
+    ▼  ▼   ▼  ▼    ▼  ▼   ▼  ▼
+`}
+</AsciiDiagram>
+
+And a simple network diagram:
+
+<AsciiDiagram>
+{`
+  Client-Server Architecture:
+
+    ┌────────┐         ┌────────┐
+    │ Client │────────▶│ Server │
+    └────────┘         └───┬────┘
+                           │
+                     ┌─────┴─────┐
+                     │           │
+                ┌────┴───┐  ┌────┴───┐
+                │  DB 1  │  │  DB 2  │
+                └────────┘  └────────┘
+`}
+</AsciiDiagram>
+
+## Inline with text
+
+Sometimes you want a diagram right in the flow of explanation. Consider how a linked list works:
+
+<AsciiDiagram>
+{`
+    ┌───┬───┐    ┌───┬───┐    ┌───┬───┐
+    │ A │ ──┼───▶│ B │ ──┼───▶│ C │ ╳ │
+    └───┴───┘    └───┴───┘    └───┴───┘
+`}
+</AsciiDiagram>
+
+Each node contains a value and a pointer to the next node.
+
+## With Sidenotes
+
+The LSM Tree is a popular write-optimized data structure. <SideNote>LSM Trees buffer writes in memory before flushing to sorted on-disk files. This converts random writes to sequential I/O.</SideNote>
+
+<AsciiDiagram>
+{`
+  LSM Tree Write Path:
+
+    Write ──▶ ┌──────────┐
+              │ MemTable │ (in-memory)
+              └─────┬────┘
+                    │ flush
+                    ▼
+              ┌──────────┐
+              │ SSTable  │ (on-disk)
+              └──────────┘
+`}
+</AsciiDiagram>
+
+## Wide Diagrams
+
+A request flowing through a microservices pipeline: <SideNote>During compaction, SSTables merge downward: L0→L1→L2, reducing read amplification.</SideNote>
+
+<AsciiDiagram>
+{`
+  Request Pipeline:
+
+    ┌────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌─────────┐    ┌────────┐
+    │ Client │───▶│ Gateway │───▶│  Auth   │───▶│  Rate   │───▶│ Service │───▶│   DB   │
+    └────────┘    └─────────┘    └─────────┘    └─────────┘    └─────────┘    └────────┘
+         │                                                                         │
+         │◀──────────────────────────── Response ──────────────────────────────────│
+`}
+</AsciiDiagram>
+
+## Sidenote with Diagram
+
+Compaction is a key part of LSM Trees. <SideNote>During compaction, SSTables merge downward: L0→L1→L2, reducing read amplification.</SideNote>
+
+During compaction, overlapping SSTables from one level are merged and written to the next level. This reduces read amplification by keeping fewer files to search through, at the cost of write amplification from rewriting data.
+
+Here's how the tree node looks in code:
+
+```rust
+struct Node<K, V> {
+    keys: Vec<K>,
+    values: Vec<V>,
+    children: Vec<Box<Node<K, V>>>,
+}
+
+impl<K: Ord, V> Node<K, V> {
+    fn new() -> Self {
+        Node {
+            keys: Vec::new(),
+            values: Vec::new(),
+            children: Vec::new(),
+        }
+    }
+
+    fn is_leaf(&self) -> bool {
+        self.children.is_empty()
+    }
+
+    fn search(&self, key: &K) -> Option<&V> {
+        match self.keys.binary_search(key) {
+            Ok(idx) => Some(&self.values[idx]),
+            Err(_) => None,
+        }
+    }
+}
+```
+
+And some inline code: the `binary_search` method returns `Ok(idx)` if found, or `Err(idx)` where `idx` is the insertion point.
+
+A shorter snippet:
+
+```python
+def compact(levels):
+    for i in range(len(levels) - 1):
+        if levels[i].size > threshold:
+            merge(levels[i], levels[i + 1])
+```
+
+And its visual structure:
+
+<AsciiDiagram>
+{`
+    ┌─────────────────────────────┐
+    │ keys:   [ k1 | k2 | k3 ]    │
+    │ values: [ v1 | v2 | v3 ]    │
+    │ children: [c0|c1|c2|c3]     │
+    └─────────────────────────────┘
+`}
+</AsciiDiagram>

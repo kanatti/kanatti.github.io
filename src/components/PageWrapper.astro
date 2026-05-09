@@ -1,6 +1,4 @@
 ---
-import SiteHeader from "./SiteHeader.astro";
-
 interface Props {
     currentPage: "home" | "blog" | "projects";
 }
@@ -8,7 +6,7 @@ interface Props {
 const { currentPage } = Astro.props;
 ---
 
-<div class="max-w-[42rem] mx-auto px-4 sm:px-6 pt-6 pb-12 relative">
+<div class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pt-6 pb-12 relative">
     <header class="mb-8">
         <nav class="flex space-x-6 mb-2">
             <a href="/" class={`text-ink text-lg ${currentPage === "home" ? "underline" : "hover:underline"}`}>Home</a>

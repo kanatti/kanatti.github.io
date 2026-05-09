@@ -79,15 +79,26 @@ html {
 
 /* Code block styling */
 pre {
-    @apply bg-code-bg border border-code-border rounded-sm p-4 my-6 overflow-auto;
+    @apply bg-transparent border border-code-border rounded-sm p-4 my-6 overflow-auto;
     font-family: 'JetBrains Mono', monospace;
     font-size: 0.9em;
+    background-color: transparent !important;
 }
 
 code {
-    @apply bg-code-bg px-1.5 py-0.5 rounded-sm;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9em;
+    @apply px-1 py-0.5 rounded-sm;
+    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, monospace !important;
+    font-size: 0.8em !important;
+    background-color: #f7f7f7 !important;
+    font-weight: 450 !important;
+}
+
+pre code {
+    @apply px-0 py-0 rounded-none;
+    font-family: 'JetBrains Mono', monospace !important;
+    font-size: inherit !important;
+    background-color: transparent !important;
+    font-weight: 400 !important;
 }
 
 /* Blockquote styling */

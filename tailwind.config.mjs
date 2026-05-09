@@ -59,7 +59,7 @@ export default {
 						code: {
 							fontFamily: '"JetBrains Mono", monospace',
 							fontSize: '0.9em',
-							backgroundColor: theme('colors.code-bg'),
+							backgroundColor: 'transparent',
 							borderRadius: '0.25rem',
 							padding: '0.2em 0.4em'
 						},
@@ -72,7 +72,7 @@ export default {
 						pre: {
 							fontFamily: '"JetBrains Mono", monospace',
 							fontSize: '0.9em',
-							backgroundColor: theme('colors.code-bg'),
+							backgroundColor: 'transparent',
 							border: `1px solid ${theme('colors.code-border')}`,
 							borderRadius: '0.25rem',
 							padding: '1rem',
