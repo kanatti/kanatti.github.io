@@ -1,12 +1,17 @@
 ---
 import type { CollectionEntry } from "astro:content";
 import clsx from "clsx";
+import { seriesInfo } from "../data/series";
 
 interface Props {
 	post: CollectionEntry<"post">;
 }
 
 const { post } = Astro.props;
+
+const seriesSlug = post.data.series;
+const seriesOrder = post.data.seriesOrder;
+const series = seriesSlug ? seriesInfo[seriesSlug] : null;
 
 const classes = [
 	// Setup Prose
@@ -54,7 +59,8 @@ const articleClasses = clsx(classes);
 		<header class="mb-8">
 			<nav class="flex space-x-6 mb-2">
 				<a href="/" class="text-ink hover:underline text-lg">Home</a>
-				<a href="/blog" class="text-ink hover:underline text-lg">Blog</a>
+				<a href="/posts" class="text-ink hover:underline text-lg">Posts</a>
+				<a href="/series" class="text-ink hover:underline text-lg">Series</a>
 				<a href="/projects" class="text-ink hover:underline text-lg">Projects</a>
 			</nav>
 			<hr class="border-gray-600 mb-8" />
@@ -64,6 +70,11 @@ const articleClasses = clsx(classes);
 			class={`${articleClasses} relative overflow-visible`}
 			style="counter-reset: sidenote-counter;"
 		>
+			{series && seriesOrder && (
+				<p class="text-sm text-ink-light mb-6">
+					Part {seriesOrder} of <a href={`/series/${seriesSlug}`} class="text-ink underline">{series.title}</a>
+				</p>
+			)}
 			<slot />
 		</article>
 	</div>

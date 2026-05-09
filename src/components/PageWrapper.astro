@@ -1,6 +1,6 @@
 ---
 interface Props {
-    currentPage: "home" | "blog" | "projects";
+    currentPage: "home" | "posts" | "series" | "projects";
 }
 
 const { currentPage } = Astro.props;
@@ -10,7 +10,8 @@ const { currentPage } = Astro.props;
     <header class="mb-8">
         <nav class="flex space-x-6 mb-2">
             <a href="/" class={`text-ink text-lg ${currentPage === "home" ? "underline" : "hover:underline"}`}>Home</a>
-            <a href="/blog" class={`text-ink text-lg ${currentPage === "blog" ? "underline" : "hover:underline"}`}>Blog</a>
+            <a href="/posts" class={`text-ink text-lg ${currentPage === "posts" ? "underline" : "hover:underline"}`}>Posts</a>
+            <a href="/series" class={`text-ink text-lg ${currentPage === "series" ? "underline" : "hover:underline"}`}>Series</a>
             <a href="/projects" class={`text-ink text-lg ${currentPage === "projects" ? "underline" : "hover:underline"}`}>Projects</a>
         </nav>
         <hr class="border-gray-600 mb-8" />

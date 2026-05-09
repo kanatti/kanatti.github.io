@@ -43,14 +43,14 @@ const pageTitle = `Posts tagged "${tag}" - Page ${page.currentPage}`;
 ---
 
 <PageLayout title={pageTitle}>
-    <PageWrapper currentPage="blog">
+    <PageWrapper currentPage="posts">
         <div class="mb-8">
             <p class="text-ink-light">
                 Posts tagged "{tag}" · Page {page.currentPage} of {page.lastPage}
             </p>
         </div>
 
-        <section aria-label="Tagged blog posts">
+        <section aria-label="Tagged posts">
             <ul class="space-y-8">
                 {
                     page.data.map((post) => (
@@ -104,10 +104,10 @@ const pageTitle = `Posts tagged "${tag}" - Page ${page.currentPage}`;
             )
         }
 
-        {/* Back to blog link */}
+        {/* Back to all posts link */}
         <div class="text-center mt-8">
             <a
-                href="/blog"
+                href="/posts"
                 class="text-ink-light hover:text-ink hover:underline"
             >
                 ← Back to all posts

@@ -1,0 +1,55 @@
+---
+import type { GetStaticPaths } from "astro";
+import PageLayout from "../../layouts/Page.astro";
+import PageWrapper from "../../components/PageWrapper.astro";
+import { getAllPosts } from "../../utils";
+import { getFormattedDate } from "../../utils";
+import { seriesInfo } from "../../data/series";
+
+export const getStaticPaths = (async () => {
+	const allPosts = await getAllPosts();
+
+	return Object.entries(seriesInfo).map(([slug, info]) => {
+		const posts = allPosts
+			.filter((post) => post.data.series === slug)
+			.sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
+		return {
+			params: { slug },
+			props: { ...info, posts },
+		};
+	});
+}) satisfies GetStaticPaths;
+
+interface Props {
+	title: string;
+	description: string;
+	posts: any[];
+}
+
+const { title, description, posts } = Astro.props;
+---
+
+<PageLayout title={title}>
+	<PageWrapper currentPage="series">
+		<h1 class="text-3xl font-normal mb-2">{title}</h1>
+		<p class="text-ink-light mb-8">{description}</p>
+
+		<ol class="space-y-4">
+			{posts.map((post, i) => (
+				<li class="flex items-baseline gap-4">
+					<span class="text-ink-light text-sm font-mono">{i + 1}.</span>
+					<div>
+						<a href={`/posts/${post.slug}`} class="text-lg text-ink hover:underline">
+							{post.data.title}
+						</a>
+						<span class="text-sm text-ink-light ml-2">{getFormattedDate(post.data.publishDate)}</span>
+					</div>
+				</li>
+			))}
+		</ol>
+
+		<div class="mt-8 text-center">
+			<a href="/series" class="text-ink-light hover:text-ink hover:underline">← All series</a>
+		</div>
+	</PageWrapper>
+</PageLayout>

@@ -19,11 +19,11 @@ interface Props {
 const { page } = Astro.props;
 
 const pageTitle =
-	page.currentPage === 1 ? "Blog" : `Blog - Page ${page.currentPage}`;
+	page.currentPage === 1 ? "Posts" : `Posts - Page ${page.currentPage}`;
 ---
 
 <PageLayout title={pageTitle}>
-	<PageWrapper currentPage="blog">
+	<PageWrapper currentPage="posts">
 		<section aria-label="Blog post list">
 			<ul class="space-y-8">
 				{

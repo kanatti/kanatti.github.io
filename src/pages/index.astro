@@ -3,6 +3,7 @@ import { getCollection } from "astro:content";
 import { Icon } from "astro-icon/components";
 import PageWrapper from "../components/PageWrapper.astro";
 import PostPreview from "../components/PostPreview.astro";
+import { seriesInfo } from "../data/series";
 import "../styles/global.css";
 
 const posts = await getCollection("post", ({ data }) => {
@@ -15,6 +16,14 @@ const sortedPosts = posts.sort((a, b) => {
 		new Date(a.data.publishDate).getTime()
 	);
 });
+
+// Build series data
+const seriesData = Object.entries(seriesInfo)
+	.map(([slug, info]) => {
+		const count = posts.filter((post) => post.data.series === slug).length;
+		return { slug, ...info, count };
+	})
+	.filter((s) => s.count > 0);
 ---
 
 <!doctype html>
@@ -49,11 +58,14 @@ const sortedPosts = posts.sort((a, b) => {
 			</section>
 
 			<section class="mb-8">
-				<h2
-					class="text-2xl font-normal inline-block border-b border-gray-600 mb-6"
-				>
-					Recent Posts
-				</h2>
+				<div class="flex items-baseline justify-between mb-6">
+					<h2
+						class="text-2xl font-normal inline-block border-b border-gray-600"
+					>
+						Recent Posts
+					</h2>
+					<a href="/posts" class="text-base text-ink hover:underline">See all posts →</a>
+				</div>
 				<ul class="space-y-6">
 					{
 						sortedPosts
@@ -65,51 +77,68 @@ const sortedPosts = posts.sort((a, b) => {
 				</ul>
 			</section>
 
-			<section>
-				<h2
-					class="text-2xl font-normal inline-block border-b border-gray-600 mb-6"
-				>
-					Contact
-				</h2>
-				<div class="flex flex-wrap gap-4 sm:gap-6">
-					<a
-						href="https://github.com/kanatti"
-						class="flex items-center text-ink hover:text-gray-600 hover:underline text-lg"
-					>
-						<Icon
-							name="mdi:github"
-							aria-hidden="true"
-							focusable="false"
-							class="inline-block w-5 h-5 mr-1"
-						/>
-						GitHub
-					</a>
-					<a
-						href="https://twitter.com/bkanattil"
-						class="flex items-center text-ink hover:text-gray-600 hover:underline text-lg"
-					>
-						<Icon
-							name="mdi:twitter"
-							aria-hidden="true"
-							focusable="false"
-							class="inline-block w-5 h-5 mr-1"
-						/>
-						Twitter
-					</a>
-					<a
-						href="mailto:balukanattil@gmail.com"
-						class="flex items-center text-ink hover:text-gray-600 hover:underline text-lg"
-					>
-						<Icon
-							name="mdi:email"
-							aria-hidden="true"
-							focusable="false"
-							class="inline-block w-5 h-5 mr-1"
-						/>
-						Email
-					</a>
-				</div>
-			</section>
+			{seriesData.length > 0 && (
+				<section class="mb-8">
+					<div class="flex items-baseline justify-between mb-6">
+						<h2 class="text-2xl font-normal inline-block border-b border-gray-600">
+							Series
+						</h2>
+						<a href="/series" class="text-base text-ink hover:underline">See all series →</a>
+					</div>
+					<ul class="space-y-4">
+						{seriesData.map((series) => (
+							<li>
+								<a href={`/series/${series.slug}`} class="text-lg text-ink hover:underline">
+									{series.title}
+								</a>
+								<span class="text-sm text-ink-light ml-2">({series.count} post{series.count !== 1 ? "s" : ""})</span>
+							</li>
+						))}
+					</ul>
+				</section>
+			)}
+
 		</PageWrapper>
+		<footer class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pb-12">
+			<hr class="border-gray-600 mb-6" />
+			<div class="flex flex-wrap gap-4 sm:gap-6">
+				<a
+					href="https://github.com/kanatti"
+					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
+				>
+					<Icon
+						name="mdi:github"
+						aria-hidden="true"
+						focusable="false"
+						class="inline-block w-5 h-5 mr-1"
+					/>
+					kanatti
+				</a>
+				<a
+					href="https://twitter.com/bkanattil"
+					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
+				>
+					<Icon
+						name="mdi:twitter"
+						aria-hidden="true"
+						focusable="false"
+						class="inline-block w-5 h-5 mr-1"
+					/>
+					@bkanattil
+				</a>
+				<a
+					href="https://www.linkedin.com/in/balagopal-kanattil/"
+					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
+				>
+					<Icon
+						name="mdi:linkedin"
+						aria-hidden="true"
+						focusable="false"
+						class="inline-block w-5 h-5 mr-1"
+					/>
+					balagopal-kanattil
+				</a>
+			</div>
+		</footer>
 	</body>
 </html>

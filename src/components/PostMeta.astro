@@ -25,7 +25,7 @@ const { date, tags } = Astro.props;
         tags && tags.length > 0 && (
             <div class="flex flex-wrap gap-2">
                 {tags.map((tag: string) => (
-                    <Tag tag={tag} href={`/blog/tag/${tag}`} />
+                    <Tag tag={tag} href={`/posts/tag/${tag}`} />
                 ))}
             </div>
         )

@@ -1,0 +1,35 @@
+---
+import PageLayout from "../../layouts/Page.astro";
+import PageWrapper from "../../components/PageWrapper.astro";
+import { getAllPosts } from "../../utils";
+import { seriesInfo } from "../../data/series";
+
+const allPosts = await getAllPosts();
+
+// Build series data from posts
+const seriesData = Object.entries(seriesInfo)
+	.map(([slug, info]) => {
+		const posts = allPosts
+			.filter((post) => post.data.series === slug)
+			.sort((a, b) => (a.data.seriesOrder ?? 0) - (b.data.seriesOrder ?? 0));
+		return { slug, ...info, posts, count: posts.length };
+	})
+	.filter((s) => s.count > 0);
+---
+
+<PageLayout title="Series">
+	<PageWrapper currentPage="series">
+		<h1 class="text-3xl font-normal mb-8">Series</h1>
+		<ul class="space-y-4">
+			{seriesData.map((series) => (
+				<li>
+					<a href={`/series/${series.slug}`} class="text-lg text-ink hover:underline">
+						{series.title}
+					</a>
+					<span class="text-sm text-ink-light ml-2">({series.count} post{series.count !== 1 ? "s" : ""})</span>
+					<p class="text-ink-light mt-1">{series.description}</p>
+				</li>
+			))}
+		</ul>
+	</PageWrapper>
+</PageLayout>

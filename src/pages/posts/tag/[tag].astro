@@ -40,14 +40,14 @@ const pageTitle = `Posts tagged "${tag}"`;
 ---
 
 <PageLayout title={pageTitle}>
-    <PageWrapper currentPage="blog">
+    <PageWrapper currentPage="posts">
         <div class="mb-8">
             <p class="text-ink-light">
                 Found {totalPosts} post{totalPosts !== 1 ? "s" : ""} tagged with "{tag}"
             </p>
         </div>
 
-        <section aria-label="Tagged blog posts">
+        <section aria-label="Tagged posts">
             <ul class="space-y-8">
                 {
                     posts.map((post) => (
@@ -62,7 +62,7 @@ const pageTitle = `Posts tagged "${tag}"`;
             hasMore && (
                 <div class="text-center mt-12 pt-8 border-t border-gray-200">
                     <a
-                        href={`/blog/tag/${tag}/2`}
+                        href={`/posts/tag/${tag}/2`}
                         class="text-ink hover:underline text-lg"
                     >
                         View more posts tagged "{tag}" →
@@ -71,10 +71,10 @@ const pageTitle = `Posts tagged "${tag}"`;
             )
         }
 
-        {/* Back to blog link */}
+        {/* Back to all posts link */}
         <div class="text-center mt-8">
             <a
-                href="/blog"
+                href="/posts"
                 class="text-ink-light hover:text-ink hover:underline"
             >
                 ← Back to all posts
