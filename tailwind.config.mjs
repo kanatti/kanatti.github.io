@@ -2,16 +2,14 @@
 
 export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
-	darkMode: "class",
 	theme: {
 		extend: {
 			colors: {
-				// Paper-like colors
 				"paper": "#fcfcfc",
 				"paper-dark": "#f8f8f8",
 				"ink": "#1a1a1a",
 				"ink-light": "#444444",
-				"accent": "#2c5282", // Dark blue for links
+				"accent": "#2c5282",
 				"accent-light": "#ebf4ff",
 				"gray-95": "#F2F2F2",
 				"code-bg": "#f5f5f5",
@@ -22,7 +20,7 @@ export default {
 			spacing: {
 				"36rem": "36rem",
 				"48rem": "48rem",
-				"content": "42rem" // ~672px optimal content width
+				"content": "42rem"
 			},
 			typography: ({ theme }) => ({
 				serif: {
@@ -34,9 +32,9 @@ export default {
 						'--tw-prose-code': theme('colors.ink'),
 						'--tw-prose-quotes': theme('colors.ink-light'),
 						fontFamily: '"et-book", "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", "Georgia", "crimson", serif',
-						fontSize: '1.125rem', // 18px
-						lineHeight: '1.75', // Appropriate line height
-						maxWidth: '42rem', // Match content width
+						fontSize: '1.125rem',
+						lineHeight: '1.75',
+						maxWidth: '42rem',
 						h1: {
 							fontSize: '2em',
 							marginTop: '0',

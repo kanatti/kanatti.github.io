@@ -10,23 +10,23 @@ const { post } = Astro.props;
 
 const classes = [
 	// Setup Prose
-	"prose prose-slate max-w-none",
+	"prose prose-lg prose-slate max-w-none",
 	// all headings
 	"prose-headings:font-normal prose-headings:text-ink prose-headings:mt-8 prose-headings:mb-4",
 	// h1
-	"prose-h1:text-3xl prose-h1:mt-0 prose-h1:mb-6",
+	"prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mt-0 prose-h1:mb-6",
 	// h2
-	"prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4",
+	"prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-12 prose-h2:mb-4",
 	// h3
-	"prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
+	"prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
 	// h4
 	"prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-2",
 	// p
-	"prose-p:text-xl prose-p:text-ink prose-p:mb-4",
+	"prose-p:text-lg sm:prose-p:text-xl prose-p:text-ink prose-p:mb-4",
 	// ol
-	"prose-ol:text-xl prose-ol:text-ink prose-ol:mb-4",
+	"prose-ol:text-lg sm:prose-ol:text-xl prose-ol:text-ink prose-ol:mb-4",
 	// ul
-	"prose-ul:text-xl prose-ul:text-ink prose-ul:mb-4",
+	"prose-ul:text-lg sm:prose-ul:text-xl prose-ul:text-ink prose-ul:mb-4",
 	// li
 	"prose-li:my-1 prose-li:text-ink",
 	// links
@@ -48,33 +48,23 @@ const articleClasses = clsx(classes);
 	}
 </style>
 
-<div
-	class="max-w-7xl mx-auto px-6 pt-6 pb-12 grid grid-cols-1 lg:grid-cols-[1fr_300px] gap-8"
->
+<div class="max-w-[42rem] mx-auto px-4 sm:px-6 pt-6 pb-12 relative">
 	<!-- Main Content Area -->
-	<div class="max-w-none">
+	<div>
 		<header class="mb-8">
 			<nav class="flex space-x-6 mb-2">
 				<a href="/" class="text-ink hover:underline text-lg">Home</a>
-				<a href="/blog" class="text-ink hover:underline text-lg">Blog</a
-				>
-				<a href="/projects" class="text-ink hover:underline text-lg"
-					>Projects</a
-				>
+				<a href="/blog" class="text-ink hover:underline text-lg">Blog</a>
+				<a href="/projects" class="text-ink hover:underline text-lg">Projects</a>
 			</nav>
 			<hr class="border-gray-600 mb-8" />
 		</header>
 
 		<article
-			class={`${articleClasses} relative`}
+			class={`${articleClasses} relative overflow-visible`}
 			style="counter-reset: sidenote-counter;"
 		>
 			<slot />
 		</article>
 	</div>
-
-	<!-- Sidenotes Area -->
-	<aside class="hidden lg:block">
-		<!-- Sidenotes will be positioned here via CSS -->
-	</aside>
 </div>

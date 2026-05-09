@@ -9,7 +9,6 @@ interface Props {
 
 const { post, variant = "listing" } = Astro.props;
 
-// Format date function
 const formatDate = (dateString: string) => {
     return new Date(dateString).toLocaleDateString("en-US", {
         year: "numeric",
@@ -18,20 +17,18 @@ const formatDate = (dateString: string) => {
     });
 };
 
-// Variant-specific classes
-const titleClasses = variant === "home" ? "text-xl" : "text-2xl font-normal";
+const titleClasses = variant === "home" ? "text-xl" : "text-xl sm:text-2xl font-normal";
 const containerClasses =
     variant === "listing"
         ? "border-b border-gray-200 pb-8 last:border-b-0"
         : "";
-const wrapperElement = variant === "listing" ? "article" : "div";
 ---
 
 <li class={containerClasses}>
     {
         variant === "listing" ? (
             <article>
-                <div class="flex justify-between items-baseline mb-2">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline mb-2 gap-1">
                     <h2 class={titleClasses}>
                         <a
                             href={`/blog/${post.slug}`}
@@ -42,12 +39,12 @@ const wrapperElement = variant === "listing" ? "article" : "div";
                     </h2>
                     <time
                         datetime={post.data.publishDate}
-                        class="text-base text-ink-light ml-4 flex-shrink-0"
+                        class="text-sm sm:text-base text-ink-light sm:ml-4 flex-shrink-0"
                     >
                         {formatDate(post.data.publishDate)}
                     </time>
                 </div>
-                <p class="text-lg text-ink-light mb-3">
+                <p class="text-base sm:text-lg text-ink-light mb-3">
                     {post.data.description}
                 </p>
                 {post.data.tags && post.data.tags.length > 0 && (
@@ -60,7 +57,7 @@ const wrapperElement = variant === "listing" ? "article" : "div";
             </article>
         ) : (
             <div>
-                <div class="flex justify-between items-baseline">
+                <div class="flex flex-col sm:flex-row sm:justify-between sm:items-baseline gap-1">
                     <h3 class={titleClasses}>
                         <a
                             href={`/blog/${post.slug}`}
@@ -71,12 +68,12 @@ const wrapperElement = variant === "listing" ? "article" : "div";
                     </h3>
                     <time
                         datetime={post.data.publishDate}
-                        class="text-base text-ink-light ml-4 flex-shrink-0"
+                        class="text-sm sm:text-base text-ink-light sm:ml-4 flex-shrink-0"
                     >
                         {formatDate(post.data.publishDate)}
                     </time>
                 </div>
-                <p class="mt-2 text-lg text-ink-light">
+                <p class="mt-2 text-base sm:text-lg text-ink-light">
                     {post.data.description}
                 </p>
             </div>

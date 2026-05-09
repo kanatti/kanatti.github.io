@@ -5,7 +5,6 @@ import PageWrapper from "../components/PageWrapper.astro";
 import PostPreview from "../components/PostPreview.astro";
 import "../styles/global.css";
 
-// Get all posts, sort by date
 const posts = await getCollection("post", ({ data }) => {
 	return !data.draft;
 });
@@ -30,17 +29,19 @@ const sortedPosts = posts.sort((a, b) => {
 		/>
 		<link rel="preconnect" href="https://fonts.googleapis.com" />
 		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+		<link rel="preload" href="/fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff" as="font" type="font/woff" crossorigin />
 	</head>
 	<body>
 		<PageWrapper currentPage="home">
+			<h1 class="text-3xl font-normal mb-8">Balagopal Kanattil Shaji</h1>
 			<section class="mb-8">
-				<p class="mb-4 text-xl">
+				<p class="mb-4 text-lg sm:text-xl">
 					Hi, I'm a self-taught developer with a formal education in
 					Physics from IIT Bombay. Currently, I work as a Software
 					Engineer at Amazon, focusing on Databases and Distributed
 					Systems.
 				</p>
-				<p class="text-xl">
+				<p class="text-lg sm:text-xl">
 					Outside of tech, I enjoy spending time bouldering or
 					cooking. I am also a big fan of horror, particularly the
 					works of Junji Ito and H.P. Lovecraft.
@@ -70,7 +71,7 @@ const sortedPosts = posts.sort((a, b) => {
 				>
 					Contact
 				</h2>
-				<div class="flex space-x-6">
+				<div class="flex flex-wrap gap-4 sm:gap-6">
 					<a
 						href="https://github.com/kanatti"
 						class="flex items-center text-ink hover:text-gray-600 hover:underline text-lg"
