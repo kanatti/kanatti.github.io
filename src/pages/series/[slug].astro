@@ -42,7 +42,8 @@ const { title, description, posts } = Astro.props;
 						<a href={`/posts/${post.slug}`} class="text-lg text-ink hover:underline">
 							{post.data.title}
 						</a>
-						<span class="text-sm text-ink-light ml-2">{getFormattedDate(post.data.publishDate)}</span>
+						<span class="hidden sm:inline text-sm text-ink-light ml-2">{getFormattedDate(post.data.publishDate)}</span>
+						<p class="sm:hidden text-sm text-ink-light">{getFormattedDate(post.data.publishDate)}</p>
 					</div>
 				</li>
 			))}
