@@ -51,9 +51,21 @@ const articleClasses = clsx(classes);
 	html {
 		scroll-behavior: smooth;
 	}
+
+	.post-container {
+		margin-left: auto;
+		margin-right: auto;
+	}
+
+	@media (min-width: 1080px) {
+		.post-container {
+			margin-left: calc((100vw - 66rem) / 2);
+			margin-right: auto;
+		}
+	}
 </style>
 
-<div class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pt-6 pb-12 relative">
+<div class="max-w-[48rem] post-container px-4 sm:px-6 pt-6 pb-12 relative">
 	<!-- Main Content Area -->
 	<div>
 		<header class="mb-8">

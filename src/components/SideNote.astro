@@ -1,25 +1,35 @@
-<span class="sidenote text-base text-ink-light leading-relaxed">
+<span class="sidenote">
     <slot />
 </span>
 
-<style>
+<style is:global>
     .sidenote {
         float: right;
         clear: right;
-        margin-right: -55%;
-        width: 45%;
+        margin-right: -45%;
+        width: 38%;
         margin-top: 0.5rem;
         margin-bottom: 0;
         vertical-align: baseline;
         position: relative;
         counter-increment: sidenote-counter;
+        font-size: 0.9rem !important;
+        color: #666666 !important;
+        line-height: 1.6 !important;
     }
 
     .sidenote::before {
-        content: counter(sidenote-counter) ". ";
-        font-family: "et-book-roman-old-style", "et-book", serif;
-        font-weight: bold;
-        margin-right: 0.25rem;
+        content: "";
+    }
+
+    @media (max-width: 1079px) {
+        .sidenote::before {
+            content: "";
+        }
+
+        .sidenote {
+            display: none;
+        }
     }
 
     .sidenote a {
@@ -31,18 +41,5 @@
 
     .sidenote a:hover {
         opacity: 0.8;
-    }
-
-    @media (max-width: 1439px) {
-        .sidenote {
-            display: block;
-            float: none;
-            width: 100%;
-            margin: 1rem 0;
-            padding: 0.75rem 1rem;
-            background-color: #f8f9fa;
-            border-left: 3px solid #e0e0e0;
-            border-radius: 0 0.25rem 0.25rem 0;
-        }
     }
 </style>
