@@ -4,7 +4,7 @@
 // there; copies stay so the end state shows the whole path. The end strip is drawn one row group per line
 // (row group 1 continues where row group 0 ends), so 3 columns × 2 row groups fit the main column. On a
 // phone the stages stack, one under the other, at full size. In the margin beside it, the four stages as
-// numbered steps, added as they're reached, the current one marked. It plays twice from each start.
+// numbered steps, added as they're reached, the current one marked. It plays once from each start.
 import { useContext, useEffect, useState } from 'react'
 import { Arrow, Defs } from './glyphs'
 import { CHUNKS, COLS, ROWS, ROW_GROUPS, TABLE, type Value } from './data'
@@ -12,8 +12,8 @@ import { ColName, Key, MONO, SANS, Settled, colColor, edge, tint, useActive, use
 import { reducedMotion } from './env'
 
 /** Where everything goes. Wide: the first three stages side by side, the strip under them, one row
- * group to a line. Narrow (a phone): every stage under the one before, at full size, with narrower cells
- * so the strip still fits one row group to a line. */
+ * group to a line. Narrow (a phone): the rows and the row groups side by side, then the column runs, then
+ * the strip, each centred, with narrower cells so the strip still fits one row group to a line. */
 function layout(narrow: boolean) {
   const CW = narrow ? 25 : 34 // cell
   const CH = 22
@@ -26,18 +26,24 @@ function layout(narrow: boolean) {
   const GROUP_H = LABEL + ROW_GROUPS[0].rows * PY + 12
   const RUNS_H = LABEL + COLS.length * PY + 12
   const VGAP = 34 // between stacked stages, room for an arrow
-  // each stage's top left
-  const S0: [number, number] = [0, TOP]
-  const S1: [number, number] = narrow ? [0, TOP + ROWS_H + VGAP] : [COLS.length * TPX + 52 - (TPX - PX), TOP]
-  const S2: [number, number] = narrow ? [0, S1[1] + ROW_GROUPS.length * GROUP_H - 12 + VGAP] : [S1[0] + COLS.length * TPX + 72 - (TPX - PX), TOP]
+  const GAP = narrow ? 12 : 8 // between chunks on the strip
+  const CHUNK_W = ROW_GROUPS[0].rows * PX + GAP
+  const STRIP_W = COLS.length * CHUNK_W - GAP
   const NAME_W = 52 // a column's name before its run of values
+  // narrow: the strip is the widest part, so the stages above it are centred on it
+  const TABLE_W = (COLS.length - 1) * TPX + CW // the rows, or one row group
+  const HGAP = 44 // between the rows and the row groups, room for an arrow
+  const PAIR_X = Math.max(0, (STRIP_W - (2 * TABLE_W + HGAP)) / 2)
+  const PAIR_H = Math.max(ROWS_H, ROW_GROUPS.length * GROUP_H - 12)
+  const RUNS_X = Math.max(0, (STRIP_W - (NAME_W + ROW_GROUPS[0].rows * PX)) / 2)
+  // each stage's top left
+  const S0: [number, number] = narrow ? [PAIR_X, TOP] : [0, TOP]
+  const S1: [number, number] = narrow ? [PAIR_X + TABLE_W + HGAP, TOP] : [COLS.length * TPX + 52 - (TPX - PX), TOP]
+  const S2: [number, number] = narrow ? [RUNS_X, TOP + PAIR_H + VGAP] : [S1[0] + COLS.length * TPX + 72 - (TPX - PX), TOP]
   const RUN = S2[0] + NAME_W
   const STAGES_END = narrow ? S2[1] + ROW_GROUPS.length * RUNS_H - 12 : TOP + ROW_GROUPS.length * GROUP_H
   const STRIP_Y = STAGES_END + 40
   const STRIP_PITCH = CH + 40 // one line of the end strip per row group: cells, bracket, label
-  const GAP = narrow ? 12 : 8 // between chunks on the strip
-  const CHUNK_W = ROW_GROUPS[0].rows * PX + GAP
-  const STRIP_W = COLS.length * CHUNK_W - GAP
   const groupY = (rg: number) => S1[1] + rg * GROUP_H
   const runsY = (rg: number) => (narrow ? S2[1] + rg * RUNS_H : S2[1] + rg * GROUP_H)
   const cells: Cell[] = []
@@ -59,7 +65,7 @@ function layout(narrow: boolean) {
   }
   const W = Math.max(STRIP_W, RUN + ROW_GROUPS[0].rows * PX) + 4
   const H = STRIP_Y + (ROW_GROUPS.length - 1) * STRIP_PITCH + CH + 34
-  return { narrow, CW, CH, PX, PY, TPX, TOP, LABEL, S0, S1, S2, RUN, STAGES_END, STRIP_Y, STRIP_PITCH, CHUNK_W, STRIP_W, groupY, runsY, cells, W, H, ROWS_H, GROUP_H, RUNS_H }
+  return { narrow, CW, CH, PX, PY, TPX, TOP, LABEL, S0, S1, S2, RUN, STAGES_END, STRIP_Y, STRIP_PITCH, CHUNK_W, STRIP_W, groupY, runsY, cells, W, H, ROWS_H, GROUP_H, RUNS_H, TABLE_W, PAIR_H }
 }
 type Layout = ReturnType<typeof layout>
 const WIDE = layout(false)
@@ -104,7 +110,7 @@ const rev = (s: number, t: number) => Math.max(0, Math.min(1, (t - arrive(s)) / 
 const arrowOpacity = (stage: number, t: number) => rev(stage + 1, t)
 
 /** How many times the animation plays before it stops on the full picture. */
-const PLAYS = 2
+const PLAYS = 1
 /** The end of the last play: the cells' last move, not the rest after it. */
 const LIMIT = (PLAYS - 1) * CYCLE + (CYCLE - REST)
 
@@ -151,7 +157,7 @@ export function Columns() {
   ]
   return (
     <div ref={ref}>
-    <svg viewBox={`0 0 ${L.W} ${L.H}`} width="100%" style={{ maxWidth: L.W }} className="block overflow-visible">
+    <svg viewBox={`0 0 ${L.W} ${L.H}`} width="100%" style={{ maxWidth: L.W, margin: L.narrow ? '0 auto' : undefined }} className="block overflow-visible">
       <Defs />
       <Arrows t={now} L={L} />
       {COLS.map((col, ci) => <ColName key={col} col={col} x={L.S0[0] + ci * L.TPX + L.CW / 2} y={L.TOP + 12} anchor="middle" />)}
@@ -207,9 +213,14 @@ function Arrows({ t, L }: { t: number; L: Layout }) {
   const stroke = 'var(--color-rule-strong)'
   const sets: { stage: number; d?: string; x1?: number; y1?: number; x2?: number; y2?: number; bend?: number }[] = []
   if (L.narrow) {
-    const x = 12
-    sets.push({ stage: 0, x1: x, y1: L.S0[1] + L.ROWS_H + 4, x2: x, y2: L.S1[1] - 2 })
-    sets.push({ stage: 1, x1: x, y1: L.groupY(ROW_GROUPS.length - 1) + L.GROUP_H - 8, x2: x, y2: L.S2[1] - 2 })
+    // rows across to their row group, then down the middle to the column runs and to the strip
+    for (const rg of ROW_GROUPS) {
+      const rowsMid = L.TOP + L.LABEL + (rg.firstRow + rg.rows / 2) * L.PY - 1
+      const groupMid = L.groupY(rg.rg) + L.LABEL + (rg.rows / 2) * L.PY - 1
+      sets.push({ stage: 0, x1: L.S0[0] + L.TABLE_W + 6, y1: rowsMid, x2: L.S1[0] - 6, y2: groupMid, bend: rg.rg ? 8 : 0 })
+    }
+    const x = L.STRIP_W / 2
+    sets.push({ stage: 1, x1: x, y1: L.TOP + L.PAIR_H + 4, x2: x, y2: L.S2[1] - 2 })
     sets.push({ stage: 2, x1: x, y1: L.STAGES_END + 4, x2: x, y2: L.STRIP_Y - 4 })
   } else {
     for (const rg of ROW_GROUPS) {

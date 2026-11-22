@@ -8,8 +8,7 @@ import {
   CHUNKS, COLS, DATA_END, DATA_START, ENCODING, FIELDS, FOOTER_LEN, HEADER, HEADER_BYTES, MAGIC, MAGIC_ENCR, N,
   PAGES, PAGE_TYPE, ROWS, ROWS_PER_PAGE, ROW_GROUPS, SCHEMA_ROOT, SETTINGS, SIZE_HINT, TABLE, TAIL, VALUE_BYTES,
 } from './data'
-import { Active, Key, KeySlot, Play, Settled, fmt } from './parts'
-import { reducedMotion } from './env'
+import { Active, Key, KeySlot, Play, fmt } from './parts'
 import { DataOpened, NEST_KEY_TOP, WholeFile } from './Strip'
 import { Columns } from './Columns'
 import { Hexdump } from './Hexdump'
@@ -83,7 +82,7 @@ const SECTIONS: Sec[] = [
       </>,
     ],
     source: ['cutRowGroup', 'columnWriters'],
-    plays: 'self', // Columns plays itself twice from each start
+    plays: 'self', // Columns runs its own clock, once from each start
     picture: () => <Columns />,
   },
   {
@@ -295,14 +294,7 @@ function Settings() {
 
 // ---- the page shell (focus and section rail as in f1-page) ---------------------------------------------
 
-const Replay = ({ onClick }: { onClick: () => void }) => (
-  <button onClick={onClick} aria-label="replay" className="flex items-center gap-1 text-[12px] text-ink-dim hover:text-ink focus:outline-none focus-visible:outline focus-visible:outline-1">
-    <svg width="11" height="11" viewBox="0 0 14 14" fill="none" stroke="currentColor" strokeWidth="1.4"><path d="M2.5 7a4.5 4.5 0 1 0 1.4-3.3" /><path d="M3.5 1.5v2.6h2.6" /></svg>
-    replay
-  </button>
-)
-
-function Section({ s, i, active, play, replay }: { s: Sec; i: number; active: boolean; play: number; replay: () => void }) {
+function Section({ s, i, active, play }: { s: Sec; i: number; active: boolean; play: number }) {
   const [keyEl, setKeyEl] = useState<HTMLElement | null>(null)
   const notes = notesOf(s)
   // wide screens: the margin spans the text and the picture. Each note sits level with its number in the
@@ -338,30 +330,9 @@ function Section({ s, i, active, play, replay }: { s: Sec; i: number; active: bo
     window.addEventListener('resize', measure)
     return () => { live = false; ro.disconnect(); window.removeEventListener('resize', measure) }
   }, [keyEl])
-  // every animation plays twice, then stops: a picture that doesn't loop itself is played once more after
-  // its cycle; `shown` is what the picture animates on
-  const [again, setAgain] = useState(0)
-  useEffect(() => {
-    if (!play || s.still || s.plays === 'self' || !s.cycle || reducedMotion) return
-    const id = setTimeout(() => setAgain((a) => a + 1), s.cycle * 1000)
-    return () => clearTimeout(id)
-  }, [play])
-  const shown = play * 2 + (again > 0 ? 1 : 0)
-  useEffect(() => setAgain(0), [play])
-  // replay shows only once both plays are over: a self-playing picture says so; others after two cycles
-  const [settled, setSettled] = useState(true)
-  useEffect(() => {
-    if (!play || s.still || reducedMotion) return setSettled(true)
-    setSettled(false)
-    if (s.plays === 'self') return
-    const id = setTimeout(() => setSettled(true), (s.cycle ?? 0) * 2000)
-    return () => clearTimeout(id)
-  }, [play])
-  // leaving the section stops its animation on the full picture
-  useEffect(() => { if (!active) setSettled(true) }, [active])
+  // each animation plays once each time the section comes into focus, then stops on the full picture
   return (
-    <Settled.Provider value={() => setSettled(true)}>
-    <Play.Provider value={s.plays === 'self' ? play : shown}>
+    <Play.Provider value={play}>
       <Active.Provider value={active}>
       <KeySlot.Provider value={keyEl}>
       <section id={s.id} data-sec={i} className="grid grid-cols-1 py-10 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
@@ -370,10 +341,7 @@ function Section({ s, i, active, play, replay }: { s: Sec; i: number; active: bo
           {s.title}
         </h2>
         <div ref={textRef} className="order-2 mt-2 space-y-3 text-[15px] leading-relaxed lg:order-none lg:col-start-1">{s.text}</div>
-        {/* the picture, its controls at its top left */}
         <div ref={picRef} className="order-4 mt-6 min-w-0 lg:order-none lg:col-start-1 lg:row-start-3">
-          {/* the row keeps its height so the picture doesn't jump when replay appears */}
-          {!s.still && !reducedMotion && <div className="mb-3 flex h-[18px] items-center">{settled && <Replay onClick={replay} />}</div>}
           <div className="overflow-x-auto">{s.picture()}</div>
         </div>
         {/* the margin: notes level with their numbers, then the picture's key beside the picture. On a narrow
@@ -394,7 +362,6 @@ function Section({ s, i, active, play, replay }: { s: Sec; i: number; active: bo
       </KeySlot.Provider>
       </Active.Provider>
     </Play.Provider>
-    </Settled.Provider>
   )
 }
 
@@ -461,7 +428,7 @@ export default function Page() {
       {/* the blog post supplies the title and intro, and its main column already has the lab's width and
           padding. mt-8 stands in for the bottom padding of the lab's own header. */}
       <div className="mt-8">
-        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} active={i === active} play={plays[i]} replay={() => replay(i)} />)}
+        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} active={i === active} play={plays[i]} />)}
       </div>
     </div>
   )
