@@ -1,6 +1,6 @@
 export const seriesInfo: Record<string, { title: string; description: string }> = {
-  "building-a-database": {
-    title: "Building a Database from Scratch",
-    description: "A deep dive into implementing a storage engine, from B-Trees to write-ahead logs.",
+  "parquet-explorations": {
+    title: "Parquet explorations",
+    description: "How the format works, and how DataFusion reads and writes it.",
   },
 };

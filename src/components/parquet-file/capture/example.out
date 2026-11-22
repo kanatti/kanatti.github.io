@@ -1,0 +1,163 @@
+-- loadavg { 22.09 20.36 16.96 } at 2026-11-22T01:15:32Z
+out/00_whole_file.parquet: 687 bytes, 2 row groups, 8 rows
+
+footer: 351 bytes at 328; what it says about each column chunk:
+  row group 0: 4 rows
+    chunk "id": starts at 4, 50 bytes
+    chunk "name": starts at 54, 62 bytes
+    chunk "age": starts at 116, 50 bytes
+  row group 1: 4 rows
+    chunk "id": starts at 166, 50 bytes
+    chunk "name": starts at 216, 62 bytes
+    chunk "age": starts at 278, 50 bytes
+
+offset  bytes  region
+     0      4  magic "PAR1"
+     4     17  row group 0 · "id" · page 0 · header (type 0, 2 values)
+    21      8  row group 0 · "id" · page 0 · body
+    29     17  row group 0 · "id" · page 1 · header (type 0, 2 values)
+    46      8  row group 0 · "id" · page 1 · body
+    54     17  row group 0 · "name" · page 0 · header (type 0, 2 values)
+    71     14  row group 0 · "name" · page 0 · body
+    85     17  row group 0 · "name" · page 1 · header (type 0, 2 values)
+   102     14  row group 0 · "name" · page 1 · body
+   116     17  row group 0 · "age" · page 0 · header (type 0, 2 values)
+   133      8  row group 0 · "age" · page 0 · body
+   141     17  row group 0 · "age" · page 1 · header (type 0, 2 values)
+   158      8  row group 0 · "age" · page 1 · body
+   166     17  row group 1 · "id" · page 0 · header (type 0, 2 values)
+   183      8  row group 1 · "id" · page 0 · body
+   191     17  row group 1 · "id" · page 1 · header (type 0, 2 values)
+   208      8  row group 1 · "id" · page 1 · body
+   216     17  row group 1 · "name" · page 0 · header (type 0, 2 values)
+   233     14  row group 1 · "name" · page 0 · body
+   247     17  row group 1 · "name" · page 1 · header (type 0, 2 values)
+   264     14  row group 1 · "name" · page 1 · body
+   278     17  row group 1 · "age" · page 0 · header (type 0, 2 values)
+   295      8  row group 1 · "age" · page 0 · body
+   303     17  row group 1 · "age" · page 1 · header (type 0, 2 values)
+   320      8  row group 1 · "age" · page 1 · body
+   328    351  footer (FileMetaData, Thrift compact)
+   679      4  footer length, u32 little-endian
+   683      4  magic "PAR1"
+
+687 of 687 bytes accounted for
+
+hexdump, one region at a time:
+
+-- magic "PAR1"
+000000  50 41 52 31                                      PAR1
+
+-- row group 0 · "id" · page 0 · header (type 0, 2 values)
+000004  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000014  00                                               .
+
+-- row group 0 · "id" · page 0 · body
+000015  01 00 00 00 02 00 00 00                          ........
+
+-- row group 0 · "id" · page 1 · header (type 0, 2 values)
+00001d  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+00002d  00                                               .
+
+-- row group 0 · "id" · page 1 · body
+00002e  03 00 00 00 04 00 00 00                          ........
+
+-- row group 0 · "name" · page 0 · header (type 0, 2 values)
+000036  15 00 15 1c 15 1c 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000046  00                                               .
+
+-- row group 0 · "name" · page 0 · body
+000047  03 00 00 00 61 6e 6e 03 00 00 00 62 6f 62        ....ann....bob
+
+-- row group 0 · "name" · page 1 · header (type 0, 2 values)
+000055  15 00 15 1c 15 1c 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000065  00                                               .
+
+-- row group 0 · "name" · page 1 · body
+000066  03 00 00 00 63 61 74 03 00 00 00 64 61 6e        ....cat....dan
+
+-- row group 0 · "age" · page 0 · header (type 0, 2 values)
+000074  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000084  00                                               .
+
+-- row group 0 · "age" · page 0 · body
+000085  22 00 00 00 1b 00 00 00                          ".......
+
+-- row group 0 · "age" · page 1 · header (type 0, 2 values)
+00008d  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+00009d  00                                               .
+
+-- row group 0 · "age" · page 1 · body
+00009e  2d 00 00 00 13 00 00 00                          -.......
+
+-- row group 1 · "id" · page 0 · header (type 0, 2 values)
+0000a6  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+0000b6  00                                               .
+
+-- row group 1 · "id" · page 0 · body
+0000b7  05 00 00 00 06 00 00 00                          ........
+
+-- row group 1 · "id" · page 1 · header (type 0, 2 values)
+0000bf  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+0000cf  00                                               .
+
+-- row group 1 · "id" · page 1 · body
+0000d0  07 00 00 00 08 00 00 00                          ........
+
+-- row group 1 · "name" · page 0 · header (type 0, 2 values)
+0000d8  15 00 15 1c 15 1c 2c 15 04 15 00 15 06 15 06 00  ......,.........
+0000e8  00                                               .
+
+-- row group 1 · "name" · page 0 · body
+0000e9  03 00 00 00 65 76 65 03 00 00 00 66 61 79        ....eve....fay
+
+-- row group 1 · "name" · page 1 · header (type 0, 2 values)
+0000f7  15 00 15 1c 15 1c 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000107  00                                               .
+
+-- row group 1 · "name" · page 1 · body
+000108  03 00 00 00 67 75 73 03 00 00 00 68 61 6c        ....gus....hal
+
+-- row group 1 · "age" · page 0 · header (type 0, 2 values)
+000116  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+000126  00                                               .
+
+-- row group 1 · "age" · page 0 · body
+000127  34 00 00 00 26 00 00 00                          4...&...
+
+-- row group 1 · "age" · page 1 · header (type 0, 2 values)
+00012f  15 00 15 10 15 10 2c 15 04 15 00 15 06 15 06 00  ......,.........
+00013f  00                                               .
+
+-- row group 1 · "age" · page 1 · body
+000140  3d 00 00 00 17 00 00 00                          =.......
+
+-- footer (FileMetaData, Thrift compact)
+000148  15 02 19 4c 48 0c 61 72 72 6f 77 5f 73 63 68 65  ...LH.arrow_sche
+000158  6d 61 15 06 00 15 02 25 00 18 02 69 64 00 15 0c  ma.....%...id...
+000168  25 00 18 04 6e 61 6d 65 25 00 4c 1c 00 00 00 15  %...name%.L.....
+000178  02 25 00 18 03 61 67 65 00 16 10 19 2c 19 3c 26  .%...age....,.<&
+000188  00 1c 15 02 19 25 00 06 19 18 02 69 64 15 00 16  .....%.....id...
+000198  08 16 64 16 64 26 08 49 1c 15 00 15 00 15 04 00  ..d.d&.I........
+0001a8  00 00 26 00 1c 15 0c 19 25 00 06 19 18 04 6e 61  ..&.....%.....na
+0001b8  6d 65 15 00 16 08 16 7c 16 7c 26 6c 49 1c 15 00  me.....|.|&lI...
+0001c8  15 00 15 04 00 00 00 26 00 1c 15 02 19 25 00 06  .......&.....%..
+0001d8  19 18 03 61 67 65 15 00 16 08 16 64 16 64 26 e8  ...age.....d.d&.
+0001e8  01 49 1c 15 00 15 00 15 04 00 00 00 16 c4 02 16  .I..............
+0001f8  08 26 08 16 c4 02 14 00 00 19 3c 26 00 1c 15 02  .&........<&....
+000208  19 25 00 06 19 18 02 69 64 15 00 16 08 16 64 16  .%.....id.....d.
+000218  64 26 cc 02 49 1c 15 00 15 00 15 04 00 00 00 26  d&..I..........&
+000228  00 1c 15 0c 19 25 00 06 19 18 04 6e 61 6d 65 15  .....%.....name.
+000238  00 16 08 16 7c 16 7c 26 b0 03 49 1c 15 00 15 00  ....|.|&..I.....
+000248  15 04 00 00 00 26 00 1c 15 02 19 25 00 06 19 18  .....&.....%....
+000258  03 61 67 65 15 00 16 08 16 64 16 64 26 ac 04 49  .age.....d.d&..I
+000268  1c 15 00 15 00 15 04 00 00 00 16 c4 02 16 08 26  ...............&
+000278  cc 02 16 c4 02 14 02 00 28 19 70 61 72 71 75 65  ........(.parque
+000288  74 2d 72 73 20 76 65 72 73 69 6f 6e 20 35 38 2e  t-rs.version.58.
+000298  33 2e 30 19 3c 1c 00 00 1c 00 00 1c 00 00 00     3.0.<..........
+
+-- footer length, u32 little-endian
+0002a7  5f 01 00 00                                      _...
+
+-- magic "PAR1"
+0002ab  50 41 52 31                                      PAR1
