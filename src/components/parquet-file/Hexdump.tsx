@@ -136,7 +136,8 @@ export function Hexdump() {
       </svg>
       {/* the key, in the margin: the colours, then what can be read by eye */}
       <Key>
-        <div className="flex flex-col gap-1 text-[12px] text-ink-dim">
+        {/* on a phone the legend lands far below the dump; its colours are the ones the pictures above use */}
+        <div className="hidden flex-col gap-1 text-[12px] text-ink-dim lg:flex">
           {LEGEND.map((l) => <Swatch key={l.label} r={{ kind: l.kind, page: l.col ? PAGES.find((p) => p.col === l.col) : undefined }} label={l.label} />)}
         </div>
         <p className="mb-1 mt-5 text-[12px] text-ink-dim">what to look for</p>

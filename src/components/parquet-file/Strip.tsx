@@ -145,9 +145,10 @@ export function DataOpened() {
   const hdr = cellStyle({ kind: 'header' })
   return (
     <div ref={ref}>
-      {/* the rows these bytes hold, in the margin beside them */}
+      {/* the rows these bytes hold, in the margin beside them; on a phone the margin falls below the
+          picture, away from the boxes, and the boxes already show the values, so it's left out */}
       <Key>
-        <Table />
+        <div className="hidden lg:block"><Table /></div>
       </Key>
       <Nested w={w0} />
       {STR && (
