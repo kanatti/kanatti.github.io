@@ -98,7 +98,6 @@ const LEGEND: { kind: Kind; col?: string; label: string }[] = [
   { kind: 'len', label: 'footer length' },
 ]
 
-const BAND = 15 // above a row where a find starts: its number
 
 export function Hexdump() {
   const [ref, w] = useWidth(0)

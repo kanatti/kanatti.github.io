@@ -8,7 +8,7 @@ interface Props {
 }
 
 const { post } = Astro.props;
-const { title, description, publishDate, series: seriesSlug, seriesOrder } = post.data;
+const { title, publishDate, series: seriesSlug, seriesOrder } = post.data;
 const series = seriesSlug ? seriesInfo[seriesSlug] : null;
 const date = new Date(publishDate).toISOString().slice(0, 10);
 ---

@@ -8,10 +8,7 @@ import { COLS, type Kind, type Region } from './data'
 /** How many times the enclosing section has played: 0 = draw the end state without animation. */
 export const Play = createContext(0)
 export const usePlay = () => useContext(Play)
-/** Whether the enclosing section has focus. */
-export const Active = createContext(false)
-export const useActive = () => useContext(Active)
-/** A picture that plays itself (section 1) calls this when its plays are over, so the replay button can show. */
+/** A picture that plays itself (section 1) calls this when it's done, so its stop button turns back into play. */
 export const Settled = createContext<() => void>(() => {})
 /** The margin cell beside a section's picture: a picture puts its key (steps, legend, what to look for)
  * there with <Key>, so the key sits in the margin next to it. */

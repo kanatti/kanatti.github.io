@@ -144,7 +144,7 @@ export function Columns() {
   // redraw stacked, rather than scale the text below 12 px, once the wide picture doesn't fit
   const L = w && w < WIDE.W ? NARROW : WIDE
   const moving = t !== null
-  // stopped (or not in focus): the full picture, never a moment mid-move
+  // stopped: the full picture, never a moment mid-move
   const now = t ?? CYCLE
   // the stage the cells are at, or moving to
   const cur = moving ? [3, 2, 1, 0].find((s) => now >= arrive(s) - (s ? MOVE : 0)) ?? 0 : -1

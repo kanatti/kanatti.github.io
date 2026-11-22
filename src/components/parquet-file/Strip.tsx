@@ -5,7 +5,7 @@
 // then its letters, the length drawn as a darker strip at the cell's start), and the rows they hold as a
 // small table in the margin.
 import {
-  BYTES, CHUNKS, COLS, DATA_END, DATA_START, FOOTER_LEN, FOOTER_START, MAGIC, N, PAGES, ROW_GROUPS, TABLE, TAIL, type Chunk,
+  BYTES, CHUNKS, COLS, DATA_END, DATA_START, FOOTER_LEN, FOOTER_START, MAGIC, N, PAGES, ROW_GROUPS, TABLE, TAIL,
 } from './data'
 import { Bracket, ColName, KIND_COLOR, Key, MONO, SANS, cellStyle, colColor, edge, fit, hex2, list, textW, tint, useWidth } from './parts'
 

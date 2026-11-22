@@ -43,10 +43,6 @@ const STR_CELL = pageOf(STR).cells[0]
 const INT_CELL = pageOf(INTS[0]).cells[0]
 const STR_FIELD = FIELDS.find((f) => f.name === STR)!
 const INT_FIELD = FIELDS.find((f) => f.name === INTS[0])!
-/** Each column's chunk sizes across the row groups ("50", or "60 or 64" if names differ in length), and the
- * columns with the same sizes together: [["50", [id, age]], ["62", [name]]]. */
-const sizesOf = (c: string) => [...new Set(CHUNKS.filter((k) => k.col === c).map((k) => k.len))].join(' or ')
-const LENS = [...new Set(COLS.map(sizesOf))].map((len) => [len, COLS.filter((c) => sizesOf(c) === len)] as const)
 const STR_CHUNK_BYTES = CHUNKS.filter((c) => c.col === QUERY_COL).reduce((s, c) => s + c.len, 0)
 const DATA = DATA_END - DATA_START
 // the chunk walked page by page: the first chunk of the queried column
