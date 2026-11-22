@@ -299,7 +299,7 @@ const PlayButton = ({ playing, onClick }: { playing: boolean; onClick: () => voi
   </button>
 )
 
-function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
+function Section({ s, i }: { s: Sec; i: number }) {
   const [keyEl, setKeyEl] = useState<HTMLElement | null>(null)
   const notes = notesOf(s)
   // wide screens: the margin spans the text and the picture. Each note sits level with its number in the
@@ -357,7 +357,8 @@ function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
       <KeySlot.Provider value={keyEl}>
       <section id={s.id} data-sec={i} className="grid grid-cols-1 py-10 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
         <h2 className="order-1 text-[17px] font-medium leading-snug lg:order-none lg:col-start-1">
-          <span className={`num mr-2 inline-block rounded-[3px] border px-1.5 align-[2px] font-mono text-[12px] leading-[18px] ${active ? 'border-ink bg-ink text-paper' : 'border-rule-strong text-ink-dim'}`}>{i + 1}</span>
+          {/* a quiet label: where you are shows on the rail, not here */}
+          <span className="num mr-2 font-mono text-ink-dim">{i + 1}</span>
           {s.title}
         </h2>
         <div ref={textRef} className="order-2 mt-2 space-y-3 text-[15px] leading-relaxed lg:order-none lg:col-start-1">{s.text}</div>
@@ -449,7 +450,7 @@ export default function Page() {
       {/* the blog post supplies the title and intro, and its main column already has the lab's width and
           padding. mt-8 stands in for the bottom padding of the lab's own header. */}
       <div className="mt-8">
-        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} active={i === active} />)}
+        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} />)}
       </div>
     </div>
   )
