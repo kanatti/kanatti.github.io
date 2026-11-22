@@ -1,6 +1,11 @@
 ---
 import SiteMeta from "../components/SiteMeta.astro";
 import "../styles/global.css";
+// Preloaded so the text paints in Plex from the start, instead of a fallback font that
+// rewraps (and shifts the page) when Plex arrives.
+import sans400 from "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-400-normal.woff2?url";
+import sans500 from "@fontsource/ibm-plex-sans/files/ibm-plex-sans-latin-500-normal.woff2?url";
+import mono400 from "@fontsource/ibm-plex-mono/files/ibm-plex-mono-latin-400-normal.woff2?url";
 
 interface Props {
     title: string;
@@ -11,16 +16,14 @@ const { title, description } = Astro.props;
 ---
 
 <!doctype html>
-<html>
+<html lang="en">
     <head>
         <SiteMeta title={title} description={description} />
-        <link rel="preconnect" href="https://fonts.googleapis.com" />
-        <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-        <link rel="preload" href="/fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff" as="font" type="font/woff" crossorigin />
+        {[sans400, sans500, mono400].map((href) => (
+            <link rel="preload" href={href} as="font" type="font/woff2" crossorigin />
+        ))}
     </head>
-    <body class="bg-paper text-ink font-serif">
-        <main id="main">
-            <slot />
-        </main>
+    <body class="bg-paper text-ink font-sans">
+        <slot />
     </body>
 </html>

@@ -1,139 +1,122 @@
+@import "@fontsource/ibm-plex-sans/400.css";
+@import "@fontsource/ibm-plex-sans/500.css";
+@import "@fontsource/ibm-plex-sans/600.css";
+@import "@fontsource/ibm-plex-mono/400.css";
+@import "@fontsource/ibm-plex-mono/500.css";
+@import "@fontsource/ibm-plex-mono/600.css";
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
 
-/* ET Book font faces - modern formats only */
-@font-face {
-    font-family: "et-book";
-    src: url("/fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
+/* The DataFusion Lab tokens (its src/index.css), so posts ported from the lab look the same. */
+:root {
+    --font-sans: "IBM Plex Sans", ui-sans-serif, sans-serif;
+    --font-mono: "IBM Plex Mono", ui-monospace, Menlo, monospace;
 
-@font-face {
-    font-family: "et-book";
-    src: url("/fonts/et-book/et-book-display-italic-old-style-figures/et-book-display-italic-old-style-figures.woff") format("woff");
-    font-weight: normal;
-    font-style: italic;
-    font-display: swap;
-}
+    --color-paper: #f7f6f2;
+    --color-surface: #fdfcf9;
+    --color-sunken: #eeece6;
+    --color-ink: #1d1c1a;
+    --color-ink-dim: #5f5b54;
+    --color-rule: #dcd8ce;
+    --color-rule-strong: #8a8478;
 
-@font-face {
-    font-family: "et-book";
-    src: url("/fonts/et-book/et-book-bold-line-figures/et-book-bold-line-figures.woff") format("woff");
-    font-weight: bold;
-    font-style: normal;
-    font-display: swap;
-}
+    --color-key-1: #0f8f84;
+    --color-key-2: #2f6fd0;
+    --color-key-3: #5f8f1f;
+    --color-key-4: #c4466f;
+    --color-key-5: #8a5a2e;
+    --color-key-6: #4f7f95;
+    --color-accent: #b34700;
 
-@font-face {
-    font-family: "et-book-roman-old-style";
-    src: url("/fonts/et-book/et-book-roman-old-style-figures/et-book-roman-old-style-figures.woff") format("woff");
-    font-weight: normal;
-    font-style: normal;
-    font-display: swap;
-}
-
-@font-face {
-    font-family: "et-book-semi-bold";
-    src: url("/fonts/et-book/et-book-semi-bold-old-style-figures/et-book-semi-bold-old-style-figures.woff") format("woff");
-    font-weight: 600;
-    font-style: normal;
-    font-display: swap;
-}
-
-/* Crimson Text fonts (kept as backup) */
-@font-face {
-    font-family: 'crimson';
-    font-weight: normal;
-    font-style: normal;
-    src: url('/fonts/CrimsonText-Regular.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'crimson';
-    font-weight: bold;
-    font-style: normal;
-    src: url('/fonts/CrimsonText-Bold.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'crimson';
-    font-weight: normal;
-    font-style: italic;
-    src: url('/fonts/CrimsonText-Italic.ttf') format('truetype');
-}
-
-@font-face {
-    font-family: 'crimson';
-    font-weight: bold;
-    font-style: italic;
-    src: url('/fonts/CrimsonText-BoldItalic.ttf') format('truetype');
+    /* runtime information flowing backward, in the lab's pictures */
+    --color-info: #7a4fd6;
+    --color-spill: #a86f00;
+    --color-error: #c73232;
+    --color-pruned: color-mix(in srgb, var(--color-ink) 25%, transparent);
 }
 
 html {
-    @apply scroll-smooth bg-paper text-ink;
-    font-family: "et-book", "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", "Georgia", "crimson", serif;
+    scroll-behavior: smooth;
 }
 
-/* Code block styling */
-pre {
-    @apply bg-transparent border border-code-border rounded-sm p-4 my-6 overflow-auto;
-    font-family: 'JetBrains Mono', monospace;
-    font-size: 0.9em;
-    background-color: transparent !important;
+body {
+    background: var(--color-paper);
+    color: var(--color-ink);
+    font-family: var(--font-sans);
+    font-size: 15px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+}
+
+a {
+    text-underline-offset: 2px;
+    text-decoration-thickness: 1px;
+}
+
+/* Numbers in mono with fixed widths; a slashed zero so 0 never reads as O. */
+.num {
+    font-family: var(--font-mono);
+    font-variant-numeric: tabular-nums slashed-zero;
 }
 
 code {
-    @apply px-1 py-0.5 rounded-sm;
-    font-family: ui-monospace, 'SF Mono', Menlo, Monaco, monospace !important;
-    font-size: 0.8em !important;
-    background-color: #f7f7f7 !important;
-    font-weight: 450 !important;
+    font-family: var(--font-mono);
+    font-size: 0.9em;
+    font-variant-numeric: tabular-nums slashed-zero;
 }
 
-pre code {
-    @apply px-0 py-0 rounded-none;
-    font-family: 'JetBrains Mono', monospace !important;
-    font-size: inherit !important;
-    background-color: transparent !important;
-    font-weight: 400 !important;
+pre {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 1.5;
+    border: 1px solid var(--color-rule);
+    border-radius: 3px;
+    padding: 12px 14px;
+    margin: 1.5rem 0;
+    overflow: auto;
+    background: var(--color-surface) !important;
 }
 
-/* Blockquote styling */
-blockquote {
-    @apply border-l-4 border-quote-border pl-4 py-1 italic text-ink-light my-6;
-}
-
-/* Tables */
 table {
-    @apply w-full border-collapse my-6;
+    border-collapse: collapse;
 }
 
-th {
-    @apply border-b-2 border-gray-200 py-2 px-4 text-left;
+/* SVG stage text in the lab's pictures: 12 px mono, never smaller, with a slashed zero. */
+.st-label {
+    font: 500 12px var(--font-mono);
+    fill: var(--color-ink-dim);
+}
+.st-strong {
+    font: 600 12px var(--font-mono);
+    fill: var(--color-ink);
+}
+.st-num {
+    font: 500 12px var(--font-mono);
+    fill: var(--color-ink);
+}
+.st-num,
+.st-label,
+.st-strong {
+    font-variant-numeric: tabular-nums slashed-zero;
 }
 
-td {
-    @apply border-b border-gray-200 py-2 px-4;
+@keyframes flow {
+    to {
+        stroke-dashoffset: -11;
+    }
 }
 
-/* Highlight text */
-mark {
-    @apply bg-highlight px-1;
+@media (prefers-reduced-motion: reduce) {
+    * {
+        transition-duration: 0ms !important;
+        animation-duration: 0ms !important;
+    }
 }
 
-/* Image styling */
-figure {
-    @apply my-8;
-}
-
-figcaption {
-    @apply text-center text-ink-light text-sm mt-2;
-}
-
-/* ET Book utility classes (following tufte-css pattern) */
-.numeral {
-    font-family: "et-book-roman-old-style", "et-book", serif;
+/* The lab's Tailwind v4 preflight zeroes every element's padding; v3's leaves table cells their 1 px UA
+   padding, which shifts the lab's tables. Utilities on the cells still win over this. */
+astro-island :is(th, td) {
+    padding: 0;
 }

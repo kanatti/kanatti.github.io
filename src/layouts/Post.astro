@@ -1,6 +1,6 @@
 ---
 import type { CollectionEntry } from "astro:content";
-import clsx from "clsx";
+import PageWrapper from "../components/PageWrapper.astro";
 import { seriesInfo } from "../data/series";
 
 interface Props {
@@ -8,86 +8,43 @@ interface Props {
 }
 
 const { post } = Astro.props;
-
-const seriesSlug = post.data.series;
-const seriesOrder = post.data.seriesOrder;
+const { title, description, publishDate, series: seriesSlug, seriesOrder } = post.data;
 const series = seriesSlug ? seriesInfo[seriesSlug] : null;
-
-const classes = [
-	// Setup Prose
-	"prose prose-lg prose-slate max-w-none",
-	// all headings
-	"prose-headings:font-normal prose-headings:text-ink prose-headings:mt-8 prose-headings:mb-4",
-	// h1
-	"prose-h1:text-2xl sm:prose-h1:text-3xl prose-h1:mt-0 prose-h1:mb-6",
-	// h2
-	"prose-h2:text-xl sm:prose-h2:text-2xl prose-h2:mt-8 prose-h2:mb-4",
-	// h3
-	"prose-h3:text-lg sm:prose-h3:text-xl prose-h3:mt-8 prose-h3:mb-3",
-	// h4
-	"prose-h4:text-lg prose-h4:mt-6 prose-h4:mb-2",
-	// p
-	"prose-p:text-base sm:prose-p:text-lg prose-p:text-ink prose-p:mb-4",
-	// ol
-	"prose-ol:text-base sm:prose-ol:text-lg prose-ol:text-ink prose-ol:mb-4",
-	// ul
-	"prose-ul:text-base sm:prose-ul:text-lg prose-ul:text-ink prose-ul:mb-4",
-	// li
-	"prose-li:my-1 prose-li:text-ink",
-	// links
-	"prose-a:text-ink prose-a:underline prose-a:decoration-1 hover:prose-a:decoration-2",
-	// code
-	"prose-code:before:hidden prose-code:after:hidden prose-code:[font-size:0.8rem]",
-	// code block
-	"prose-pre:rounded-sm prose-pre:leading-normal prose-pre:py-3 prose-pre:px-4 prose-pre:mb-4 prose-pre:[font-size:0.8rem] prose-pre:bg-transparent",
-	// blockquotes
-	"prose-blockquote:border-l-4 prose-blockquote:border-gray-300 prose-blockquote:pl-4 prose-blockquote:italic prose-blockquote:text-ink-light prose-blockquote:mb-4 prose-blockquote:py-0 prose-blockquote:my-4 prose-blockquote:[&>p]:my-0",
-];
-
-const articleClasses = clsx(classes);
+const date = new Date(publishDate).toISOString().slice(0, 10);
 ---
 
-<style>
-	html {
-		scroll-behavior: smooth;
-	}
-
-	.post-container {
-		margin-left: auto;
-		margin-right: auto;
-	}
-
-	@media (min-width: 1080px) {
-		.post-container {
-			margin-left: calc((100vw - 66rem) / 2);
-			margin-right: auto;
-		}
-	}
-</style>
-
-<div class="max-w-[48rem] post-container px-4 sm:px-6 pt-6 pb-12 relative">
-	<!-- Main Content Area -->
-	<div>
-		<header class="mb-8">
-			<nav class="flex space-x-6 mb-2">
-				<a href="/" class="text-ink hover:underline text-lg">Home</a>
-				<a href="/posts" class="text-ink hover:underline text-lg">Posts</a>
-				<a href="/series" class="text-ink hover:underline text-lg">Series</a>
-				<a href="/projects" class="text-ink hover:underline text-lg">Projects</a>
-			</nav>
-			<hr class="border-gray-600 mb-8" />
-		</header>
-
-		<article
-			class={`${articleClasses} relative overflow-visible`}
-			style="counter-reset: sidenote-counter;"
-		>
-			{series && seriesOrder && (
-				<p class="text-sm text-ink-light mb-6">
-					Part {seriesOrder} of <a href={`/series/${seriesSlug}`} class="text-ink underline">{series.title}</a>
-				</p>
-			)}
+<PageWrapper>
+	<!-- the lab page's header: title and lede in the 640 px column, the margin beside it -->
+	<header class="grid grid-cols-1 pt-8 pb-3 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
+		<div>
+			<p class="text-[12px] text-ink-dim">
+				<time datetime={publishDate} class="num">{date}</time>
+				{series && seriesOrder && (
+					<span> · part {seriesOrder} of <a href={`/series/${seriesSlug}`} class="underline hover:text-ink">{series.title}</a></span>
+				)}
+			</p>
+			<h1 class="mt-2 text-[22px] font-medium">{title}</h1>
+		</div>
+	</header>
+	<!-- prose keeps to the 640 px column; a lab island (astro-island) spans the column and the margin -->
+	<article class="post-body pb-10">
+		<div class="post-flow space-y-3 text-[15px] leading-relaxed">
 			<slot />
-		</article>
-	</div>
-</div>
+		</div>
+	</article>
+</PageWrapper>
+
+<style is:global>
+	/* the 640 px column of the header's grid: minmax(0, 640px) beside a 48 px gap and the 300 px margin */
+	@media (min-width: 1024px) {
+		.post-flow > :not(astro-island) { max-width: min(640px, calc(100% - 348px)); }
+	}
+	/* prose styles stop at a lab island, which brings its own */
+	.post-body h2:not(astro-island *) { font-size: 17px; font-weight: 500; line-height: 1.35; padding-top: 1.5rem; }
+	.post-body h3:not(astro-island *) { font-size: 15px; font-weight: 500; padding-top: 1rem; }
+	.post-body a:not(astro-island *) { text-decoration: underline; }
+	.post-body ul:not(astro-island *) { list-style: disc; padding-left: 1.25rem; }
+	.post-body ol:not(astro-island *) { list-style: decimal; padding-left: 1.25rem; }
+	.post-body :not(pre) > code:not(astro-island *) { background: var(--color-sunken); border-radius: 2px; padding: 0 4px; }
+	.post-body blockquote:not(astro-island *) { border-left: 2px solid var(--color-rule-strong); padding-left: 12px; color: var(--color-ink-dim); }
+</style>

@@ -1,22 +1,42 @@
 ---
+import { Icon } from "astro-icon/components";
+
 interface Props {
-    currentPage: "home" | "posts" | "series" | "projects";
+    currentPage?: "home" | "posts" | "series" | "projects";
+    /** Social links at the right of the top bar; only the home page shows them. */
+    socials?: boolean;
 }
 
-const { currentPage } = Astro.props;
+const { currentPage, socials = false } = Astro.props;
+const socialLinks = [
+    { title: "GitHub", icon: "mdi:github", href: "https://github.com/kanatti" },
+    { title: "Twitter", icon: "mdi:twitter", href: "https://twitter.com/bkanattil" },
+    { title: "LinkedIn", icon: "mdi:linkedin", href: "https://www.linkedin.com/in/balagopal-kanattil/" },
+];
+const links = [
+    { id: "posts", title: "posts", href: "/posts" },
+    { id: "projects", title: "projects", href: "/projects" },
+];
 ---
 
-<div class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pt-6 pb-12 relative">
-    <header class="mb-8">
-        <nav class="flex space-x-6 mb-2">
-            <a href="/" class={`text-ink text-lg ${currentPage === "home" ? "underline" : "hover:underline"}`}>Home</a>
-            <a href="/posts" class={`text-ink text-lg ${currentPage === "posts" ? "underline" : "hover:underline"}`}>Posts</a>
-            <a href="/series" class={`text-ink text-lg ${currentPage === "series" ? "underline" : "hover:underline"}`}>Series</a>
-            <a href="/projects" class={`text-ink text-lg ${currentPage === "projects" ? "underline" : "hover:underline"}`}>Projects</a>
-        </nav>
-        <hr class="border-gray-600 mb-8" />
-    </header>
-    <main>
+<div class="min-h-screen flex flex-col">
+    <!-- the thin top bar of the DataFusion Lab pages -->
+    <nav class="flex items-center gap-4 border-b border-rule px-5 py-2 text-[12px]">
+        <a href="/" class={`font-medium ${currentPage === "home" ? "text-ink" : "text-ink hover:underline"}`}>Balagopal Kanattil</a>
+        {links.map((l) => (
+            <a href={l.href} class={currentPage === l.id ? "text-ink underline" : "text-ink-dim hover:text-ink hover:underline"}>{l.title}</a>
+        ))}
+        {socials && (
+            <span class="ml-auto flex items-center gap-3">
+                {socialLinks.map((l) => (
+                    <a href={l.href} target="_blank" rel="noopener noreferrer" title={l.title} aria-label={l.title} class="text-ink-dim hover:text-ink">
+                        <Icon name={l.icon} aria-hidden="true" class="h-4 w-4" />
+                    </a>
+                ))}
+            </span>
+        )}
+    </nav>
+    <main class="mx-auto w-full max-w-[1036px] flex-1 px-6">
         <slot />
     </main>
 </div>

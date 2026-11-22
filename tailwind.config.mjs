@@ -1,100 +1,35 @@
 /** @type {import('tailwindcss').Config} */
 
+// Colours and fonts follow the DataFusion Lab pages; the values are CSS variables in
+// src/styles/global.css, so pictures that use var(--color-*) and classes like text-ink-dim agree.
+const v = (name) => `var(--color-${name})`
+
 export default {
 	content: ['./src/**/*.{astro,html,js,jsx,md,mdx,svelte,ts,tsx,vue}'],
 	theme: {
 		extend: {
 			colors: {
-				"paper": "#fcfcfc",
-				"paper-dark": "#f8f8f8",
-				"ink": "#1a1a1a",
-				"ink-light": "#444444",
-				"accent": "#2c5282",
-				"accent-light": "#ebf4ff",
-				"gray-95": "#F2F2F2",
-				"code-bg": "#f5f5f5",
-				"code-border": "#e0e0e0",
-				"highlight": "#fffbeb",
-				"quote-border": "#cbd5e1"
+				paper: v('paper'),
+				surface: v('surface'),
+				sunken: v('sunken'),
+				ink: v('ink'),
+				'ink-dim': v('ink-dim'),
+				'ink-light': v('ink-dim'),
+				rule: v('rule'),
+				'rule-strong': v('rule-strong'),
+				'key-1': v('key-1'),
+				'key-2': v('key-2'),
+				'key-3': v('key-3'),
+				'key-4': v('key-4'),
+				'key-5': v('key-5'),
+				'key-6': v('key-6'),
+				accent: v('accent'),
 			},
-			spacing: {
-				"36rem": "36rem",
-				"48rem": "48rem",
-				"content": "42rem"
-			},
-			typography: ({ theme }) => ({
-				serif: {
-					css: {
-						'--tw-prose-body': theme('colors.ink'),
-						'--tw-prose-headings': theme('colors.ink'),
-						'--tw-prose-lead': theme('colors.ink-light'),
-						'--tw-prose-links': theme('colors.accent'),
-						'--tw-prose-code': theme('colors.ink'),
-						'--tw-prose-quotes': theme('colors.ink-light'),
-						fontFamily: '"et-book", "Palatino", "Palatino Linotype", "Palatino LT STD", "Book Antiqua", "Georgia", "crimson", serif',
-						fontSize: '1.125rem',
-						lineHeight: '1.75',
-						maxWidth: '42rem',
-						h1: {
-							fontSize: '2em',
-							marginTop: '0',
-							marginBottom: '1.5rem',
-							lineHeight: '1.2'
-						},
-						h2: {
-							fontSize: '1.5em',
-							marginTop: '2rem',
-							marginBottom: '1rem',
-							lineHeight: '1.3'
-						},
-						h3: {
-							fontSize: '1.25em',
-							marginTop: '1.5rem',
-							marginBottom: '0.75rem'
-						},
-						p: {
-							marginTop: '1.25em',
-							marginBottom: '1.25em'
-						},
-						code: {
-							fontFamily: '"JetBrains Mono", monospace',
-							fontSize: '0.9em',
-							backgroundColor: 'transparent',
-							borderRadius: '0.25rem',
-							padding: '0.2em 0.4em'
-						},
-						'code::before': {
-							content: '""'
-						},
-						'code::after': {
-							content: '""'
-						},
-						pre: {
-							fontFamily: '"JetBrains Mono", monospace',
-							fontSize: '0.9em',
-							backgroundColor: 'transparent',
-							border: `1px solid ${theme('colors.code-border')}`,
-							borderRadius: '0.25rem',
-							padding: '1rem',
-							overflow: 'auto'
-						},
-						blockquote: {
-							borderLeftColor: theme('colors.quote-border'),
-							borderLeftWidth: '0.25rem',
-							padding: '0.5rem 0 0.5rem 1rem',
-							fontStyle: 'italic',
-							color: theme('colors.ink-light')
-						}
-					}
-				}
-			}),
 			fontFamily: {
-				serif: ['"et-book"', '"Palatino"', '"Palatino Linotype"', '"Palatino LT STD"', '"Book Antiqua"', '"Georgia"', '"crimson"', 'serif'],
-				mono: ['JetBrains Mono', 'monospace']
-			}
+				sans: ['"IBM Plex Sans"', 'ui-sans-serif', 'sans-serif'],
+				mono: ['"IBM Plex Mono"', 'ui-monospace', 'Menlo', 'monospace'],
+			},
 		},
 	},
-	plugins: [
-		require("@tailwindcss/typography")
-	],
+	plugins: [require('@tailwindcss/typography')],
 }

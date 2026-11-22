@@ -24,8 +24,9 @@ const pageTitle =
 
 <PageLayout title={pageTitle}>
 	<PageWrapper currentPage="posts">
-		<section aria-label="Blog post list">
-			<ul class="space-y-8">
+		<section aria-label="Blog post list" class="max-w-[640px] py-8">
+			<h1 class="text-[22px] font-medium">Posts</h1>
+			<ul class="mt-6">
 				{
 					page.data.map((post) => (
 						<PostPreview post={post} />
@@ -38,26 +39,26 @@ const pageTitle =
 		{
 			(page.url.prev || page.url.next) && (
 				<nav
-					class="flex justify-between items-center mt-12 pt-8 border-t border-gray-200"
+					class="max-w-[640px] flex justify-between items-center pb-8 text-[12px] text-ink-dim"
 					aria-label="Pagination"
 				>
 					<div>
 						{page.url.prev ? (
 							<a
 								href={page.url.prev}
-								class="text-ink hover:underline text-lg"
+								class="text-ink hover:underline "
 								rel="prev"
 							>
 								← Previous
 							</a>
 						) : (
-							<span class="text-ink-light text-lg">
+							<span class="text-ink-light ">
 								← Previous
 							</span>
 						)}
 					</div>
 
-					<div class="text-ink-light">
+					<div class="num">
 						Page {page.currentPage} of {page.lastPage}
 					</div>
 
@@ -65,13 +66,13 @@ const pageTitle =
 						{page.url.next ? (
 							<a
 								href={page.url.next}
-								class="text-ink hover:underline text-lg"
+								class="text-ink hover:underline "
 								rel="next"
 							>
 								Next →
 							</a>
 						) : (
-							<span class="text-ink-light text-lg">Next →</span>
+							<span class="text-ink-light ">Next →</span>
 						)}
 					</div>
 				</nav>

@@ -1,145 +1,50 @@
 ---
 import { getCollection } from "astro:content";
-import { Icon } from "astro-icon/components";
+import PageLayout from "../layouts/Page.astro";
 import PageWrapper from "../components/PageWrapper.astro";
 import PostPreview from "../components/PostPreview.astro";
-import { seriesInfo } from "../data/series";
-import "../styles/global.css";
 
-const posts = await getCollection("post", ({ data }) => {
-	return !data.draft;
-});
+const posts = (await getCollection("post", ({ data }) => !data.draft)).sort(
+	(a, b) => new Date(b.data.publishDate).getTime() - new Date(a.data.publishDate).getTime(),
+);
 
-const sortedPosts = posts.sort((a, b) => {
-	return (
-		new Date(b.data.publishDate).getTime() -
-		new Date(a.data.publishDate).getTime()
-	);
-});
-
-// Build series data
-const seriesData = Object.entries(seriesInfo)
-	.map(([slug, info]) => {
-		const count = posts.filter((post) => post.data.series === slug).length;
-		return { slug, ...info, count };
-	})
-	.filter((s) => s.count > 0);
 ---
 
-<!doctype html>
-<html lang="en">
-	<head>
-		<meta charset="UTF-8" />
-		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
-		<title>Balagopal Kanattil</title>
-		<meta
-			name="description"
-			content="Software Engineer specializing in databases, distributed systems, and programming languages"
-		/>
-		<link rel="preconnect" href="https://fonts.googleapis.com" />
-		<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
-		<link rel="preload" href="/fonts/et-book/et-book-roman-line-figures/et-book-roman-line-figures.woff" as="font" type="font/woff" crossorigin />
-	</head>
-	<body>
-		<PageWrapper currentPage="home">
-			<h1 class="text-3xl font-normal mb-8">Balagopal Kanattil Shaji</h1>
-			<section class="mb-8">
-				<p class="mb-4 text-base sm:text-lg">
-					Hi, I'm a self-taught developer with a formal education in
-					Physics from IIT Bombay. Currently, I work as a Software
-					Engineer at Amazon, focusing on Databases and Distributed
-					Systems. I grew up in Kerala, a small state on India's
-					southwest coast known for its food, monsoons, and backwaters.
-				</p>
-				<p class="text-base sm:text-lg">
-					When not coding, I'm either sleeping, cooking, or reading manga and sci-fi literature.
-					I'm a big fan of horror, particularly the works of Junji Ito and H.P. Lovecraft.
-					I've also recently gotten into bouldering — hopefully more posts on that soon.
-				</p>
-			</section>
-
-			<section class="mb-8">
-				<div class="flex items-baseline justify-between mb-6">
-					<h2
-						class="text-2xl font-normal inline-block border-b border-gray-600"
-					>
-						Recent Posts
-					</h2>
-					<a href="/posts" class="text-base text-ink hover:underline">See all posts →</a>
+<PageLayout
+	title="Balagopal Kanattil"
+	description="Software engineer working on databases and distributed systems"
+>
+	<PageWrapper currentPage="home" socials>
+		<!-- the same columns as a post: text on the left, the margin on the right -->
+		<header class="grid grid-cols-1 py-8 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
+			<div>
+				<h1 class="text-[22px] font-medium">Balagopal Kanattil Shaji</h1>
+				<div class="mt-3 space-y-3 text-[15px] leading-relaxed">
+					<p>
+						Hi, I'm a self-taught developer with a formal education in Physics from IIT Bombay.
+						I work as a Software Engineer at Amazon, on databases and distributed systems.
+						I grew up in Kerala, a small state on India's southwest coast known for its food, monsoons and backwaters.
+					</p>
+					<p>
+						When not coding, I'm sleeping, cooking, or reading manga and sci-fi. I'm a big fan of horror,
+						particularly Junji Ito and H.P. Lovecraft, and I've recently got into bouldering.
+					</p>
 				</div>
-				<ul class="space-y-6">
-					{
-						sortedPosts
-							.slice(0, 2)
-							.map((post) => (
-								<PostPreview post={post} />
-							))
-					}
-				</ul>
-			</section>
+			</div>
+		</header>
 
-			{seriesData.length > 0 && (
-				<section class="mb-8">
-					<div class="flex items-baseline justify-between mb-6">
-						<h2 class="text-2xl font-normal inline-block border-b border-gray-600">
-							Series
-						</h2>
-						<a href="/series" class="text-base text-ink hover:underline">See all series →</a>
+		<div class="grid grid-cols-1 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
+			<div>
+				<section class="pb-8">
+					<div class="mb-2 flex items-baseline justify-between">
+						<h2 class="text-[12px] font-medium uppercase tracking-wide text-ink-dim">Recent posts</h2>
+						<a href="/posts" class="text-[12px] text-ink-dim hover:text-ink hover:underline">all posts</a>
 					</div>
-					<ul class="space-y-4">
-						{seriesData.map((series) => (
-							<li>
-								<a href={`/series/${series.slug}`} class="text-lg text-ink hover:underline">
-									{series.title}
-								</a>
-								<span class="text-sm text-ink-light ml-2">({series.count} post{series.count !== 1 ? "s" : ""})</span>
-							</li>
-						))}
+					<ul>
+						{posts.slice(0, 5).map((post) => <PostPreview post={post} />)}
 					</ul>
 				</section>
-			)}
-
-		</PageWrapper>
-		<footer class="max-w-[48rem] mx-auto lg:ml-[15%] lg:mr-auto px-4 sm:px-6 pb-12">
-			<hr class="border-gray-600 mb-6" />
-			<div class="flex flex-wrap gap-4 sm:gap-6">
-				<a
-					href="https://github.com/kanatti"
-					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
-				>
-					<Icon
-						name="mdi:github"
-						aria-hidden="true"
-						focusable="false"
-						class="inline-block w-5 h-5 mr-1"
-					/>
-					kanatti
-				</a>
-				<a
-					href="https://twitter.com/bkanattil"
-					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
-				>
-					<Icon
-						name="mdi:twitter"
-						aria-hidden="true"
-						focusable="false"
-						class="inline-block w-5 h-5 mr-1"
-					/>
-					@bkanattil
-				</a>
-				<a
-					href="https://www.linkedin.com/in/balagopal-kanattil/"
-					class="flex items-center text-ink hover:text-gray-600 hover:underline text-base"
-				>
-					<Icon
-						name="mdi:linkedin"
-						aria-hidden="true"
-						focusable="false"
-						class="inline-block w-5 h-5 mr-1"
-					/>
-					balagopal-kanattil
-				</a>
 			</div>
-		</footer>
-	</body>
-</html>
+		</div>
+	</PageWrapper>
+</PageLayout>
