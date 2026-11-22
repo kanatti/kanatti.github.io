@@ -13,4 +13,4 @@ import ParquetFile from "../../components/parquet-file/index.tsx";
 <p class="text-ink-dim">In this post we open up a small Parquet file and look at how it's laid out. Along the way we'll see why a reader can often skip most of the file. To keep things simple, the file has no compression or encryption and uses only plain encoding. Later posts cover those.</p>
 
 {/* the lab page's sections, pictures, notes and section rail; client-only because it measures the layout */}
-<ParquetFile client:only="react" />
+<ParquetFile client:load />

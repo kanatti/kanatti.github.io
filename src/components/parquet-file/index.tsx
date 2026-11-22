@@ -339,6 +339,9 @@ function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
   // button is on wide screens only; a phone shows the still pictures.
   const [play, setPlay] = useState(0)
   const [playing, setPlaying] = useState(false)
+  // the build can't see the reader's motion setting, so the button appears once the page is live
+  const [canPlay, setCanPlay] = useState(false)
+  useEffect(() => setCanPlay(!s.still && !reducedMotion), [])
   const done = () => setPlaying(false)
   useEffect(() => {
     if (!play || s.plays === 'self' || !s.cycle) return
@@ -360,7 +363,7 @@ function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
         <div ref={textRef} className="order-2 mt-2 space-y-3 text-[15px] leading-relaxed lg:order-none lg:col-start-1">{s.text}</div>
         <div ref={picRef} className="order-4 mt-6 min-w-0 lg:order-none lg:col-start-1 lg:row-start-3">
           {/* the button keeps its place and width; only its label changes */}
-          {!s.still && !reducedMotion && (
+          {canPlay && (
             <div className="mb-3 hidden h-[18px] items-center lg:flex">
               <PlayButton playing={playing} onClick={playing ? stop : start} />
             </div>
@@ -373,7 +376,7 @@ function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
           {notes.length > 0 && (
             <div className="order-3 mt-4 text-[13px] leading-relaxed lg:order-none lg:mt-0">
               {notes.map((n, k) => (
-                <p key={k} ref={(e) => { noteEls.current[k] = e }} className={`text-ink-dim ${place ? 'absolute left-0 right-0' : 'mb-2'}`} style={place ? { top: place.at[k] } : undefined}>
+                <p key={k} ref={(e) => { noteEls.current[k] = e }} className={`text-ink-dim ${place ? 'absolute left-0 right-0' : 'mb-2 lg:invisible'}`} style={place ? { top: place.at[k] } : undefined}>
                   <sup className="num mr-1 font-mono text-[10px] text-ink">{noteNo(s.id, k)}</sup>{n}
                 </p>
               ))}
