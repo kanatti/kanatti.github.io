@@ -8,7 +8,7 @@
 import { useContext, useEffect, useState } from 'react'
 import { Arrow, Defs } from './glyphs'
 import { CHUNKS, COLS, ROWS, ROW_GROUPS, TABLE, type Value } from './data'
-import { ColName, Key, MONO, SANS, Settled, colColor, edge, tint, useActive, usePlay, useWidth } from './parts'
+import { ColName, Key, MONO, SANS, Settled, colColor, edge, tint, usePlay, useWidth } from './parts'
 import { reducedMotion } from './env'
 
 /** Where everything goes. Wide: the first three stages side by side, the strip under them, one row
@@ -114,7 +114,7 @@ const PLAYS = 1
 /** The end of the last play: the cells' last move, not the rest after it. */
 const LIMIT = (PLAYS - 1) * CYCLE + (CYCLE - REST)
 
-/** The animation's clock: from each start (`key` changes on focus and on replay) it plays PLAYS times and
+/** The animation's clock: from each start (`key` is the play count, which goes up on each press of play) it plays PLAYS times and
  * stops. Returns the time within the cycle, or null once stopped. */
 function useClock(running: boolean, key: number, onDone: () => void): number | null {
   const [t, setT] = useState<number | null>(null)
@@ -137,10 +137,9 @@ function useClock(running: boolean, key: number, onDone: () => void): number | n
 }
 
 export function Columns() {
-  const active = useActive()
   const play = usePlay()
   const settled = useContext(Settled)
-  const t = useClock(active && !reducedMotion && play > 0, play, settled)
+  const t = useClock(!reducedMotion && play > 0, play, settled)
   const [ref, w] = useWidth(0)
   // redraw stacked, rather than scale the text below 12 px, once the wide picture doesn't fit
   const L = w && w < WIDE.W ? NARROW : WIDE

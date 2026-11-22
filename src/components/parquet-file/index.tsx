@@ -8,7 +8,8 @@ import {
   CHUNKS, COLS, DATA_END, DATA_START, ENCODING, FIELDS, FOOTER_LEN, HEADER, HEADER_BYTES, MAGIC, MAGIC_ENCR, N,
   PAGES, PAGE_TYPE, ROWS, ROWS_PER_PAGE, ROW_GROUPS, SCHEMA_ROOT, SETTINGS, SIZE_HINT, TABLE, TAIL, VALUE_BYTES,
 } from './data'
-import { Active, Key, KeySlot, Play, fmt } from './parts'
+import { Key, KeySlot, Play, Settled, fmt } from './parts'
+import { reducedMotion } from './env'
 import { DataOpened, NEST_KEY_TOP, WholeFile } from './Strip'
 import { Columns } from './Columns'
 import { Hexdump } from './Hexdump'
@@ -82,7 +83,7 @@ const SECTIONS: Sec[] = [
       </>,
     ],
     source: ['cutRowGroup', 'columnWriters'],
-    plays: 'self', // Columns runs its own clock, once from each start
+    plays: 'self', // Columns runs its own clock and says when it's done
     picture: () => <Columns />,
   },
   {
@@ -294,7 +295,15 @@ function Settings() {
 
 // ---- the page shell (focus and section rail as in f1-page) ---------------------------------------------
 
-function Section({ s, i, active, play }: { s: Sec; i: number; active: boolean; play: number }) {
+/** Play, or stop while playing. Stop jumps to the finished picture, which every picture can draw at once. */
+const PlayButton = ({ playing, onClick }: { playing: boolean; onClick: () => void }) => (
+  <button onClick={onClick} aria-label={playing ? 'stop' : 'play'} className="flex w-[52px] items-center gap-1 text-[12px] text-ink-dim hover:text-ink focus:outline-none focus-visible:outline focus-visible:outline-1">
+    <svg width="9" height="10" viewBox="0 0 9 10" fill="currentColor">{playing ? <rect x="0.5" y="1" width="8" height="8" rx="1" /> : <path d="M1 0.8v8.4L8.2 5z" />}</svg>
+    {playing ? 'stop' : 'play'}
+  </button>
+)
+
+function Section({ s, i, active }: { s: Sec; i: number; active: boolean }) {
   const [keyEl, setKeyEl] = useState<HTMLElement | null>(null)
   const notes = notesOf(s)
   // wide screens: the margin spans the text and the picture. Each note sits level with its number in the
@@ -330,10 +339,22 @@ function Section({ s, i, active, play }: { s: Sec; i: number; active: boolean; p
     window.addEventListener('resize', measure)
     return () => { live = false; ro.disconnect(); window.removeEventListener('resize', measure) }
   }, [keyEl])
-  // each animation plays once each time the section comes into focus, then stops on the full picture
+  // nothing plays by itself: every picture reads well still, so motion waits for the play button. The
+  // button is on wide screens only; a phone shows the still pictures.
+  const [play, setPlay] = useState(0)
+  const [playing, setPlaying] = useState(false)
+  const done = () => setPlaying(false)
+  useEffect(() => {
+    if (!play || s.plays === 'self' || !s.cycle) return
+    const id = setTimeout(done, s.cycle * 1000)
+    return () => clearTimeout(id)
+  }, [play])
+  const start = () => { setPlaying(true); setPlay((n) => n + 1) }
+  // play 0 is the still, finished picture
+  const stop = () => { setPlaying(false); setPlay(0) }
   return (
+    <Settled.Provider value={done}>
     <Play.Provider value={play}>
-      <Active.Provider value={active}>
       <KeySlot.Provider value={keyEl}>
       <section id={s.id} data-sec={i} className="grid grid-cols-1 py-10 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
         <h2 className="order-1 text-[17px] font-medium leading-snug lg:order-none lg:col-start-1">
@@ -342,6 +363,12 @@ function Section({ s, i, active, play }: { s: Sec; i: number; active: boolean; p
         </h2>
         <div ref={textRef} className="order-2 mt-2 space-y-3 text-[15px] leading-relaxed lg:order-none lg:col-start-1">{s.text}</div>
         <div ref={picRef} className="order-4 mt-6 min-w-0 lg:order-none lg:col-start-1 lg:row-start-3">
+          {/* the button keeps its place and width; only its label changes */}
+          {!s.still && !reducedMotion && (
+            <div className="mb-3 hidden h-[18px] items-center lg:flex">
+              <PlayButton playing={playing} onClick={playing ? stop : start} />
+            </div>
+          )}
           <div className="overflow-x-auto">{s.picture()}</div>
         </div>
         {/* the margin: notes level with their numbers, then the picture's key beside the picture. On a narrow
@@ -360,18 +387,14 @@ function Section({ s, i, active, play }: { s: Sec; i: number; active: boolean; p
         </aside>
       </section>
       </KeySlot.Provider>
-      </Active.Provider>
     </Play.Provider>
+    </Settled.Provider>
   )
 }
 
 export default function Page() {
   const n = SECTIONS.length
   const [active, setActive] = useState(0)
-  const [plays, setPlays] = useState<number[]>(() => SECTIONS.map(() => 0))
-  const replay = (k: number) => setPlays((ps) => ps.map((x, j) => (j === k ? x + 1 : x)))
-  // a section plays each time it comes into focus
-  useEffect(() => replay(active), [active])
   const navUntil = useRef(0)
   // focus: the section crossing the middle of the window, else the nearest; first at the top, last at the bottom
   useEffect(() => {
@@ -409,7 +432,6 @@ export default function Page() {
       if (e.metaKey || e.ctrlKey || e.altKey) return
       if (e.key === 'ArrowDown' || e.key === 'j') { e.preventDefault(); go(active + 1) }
       else if (e.key === 'ArrowUp' || e.key === 'k') { e.preventDefault(); go(active - 1) }
-      else if (e.key === 'r') replay(active)
     }
     window.addEventListener('keydown', onKey)
     return () => window.removeEventListener('keydown', onKey)
@@ -428,7 +450,7 @@ export default function Page() {
       {/* the blog post supplies the title and intro, and its main column already has the lab's width and
           padding. mt-8 stands in for the bottom padding of the lab's own header. */}
       <div className="mt-8">
-        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} active={i === active} play={plays[i]} />)}
+        {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} active={i === active} />)}
       </div>
     </div>
   )
