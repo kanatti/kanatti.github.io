@@ -212,7 +212,7 @@ const SECTIONS: Sec[] = [
     cycle: 5.5, // seconds from one play to the next: the reads, then a rest
     picture: () => (
       <figure>
-        <figcaption className="mb-2 text-[13px] text-ink-dim">The reads for <C>SELECT {QUERY_COL}</C>.</figcaption>
+        <figcaption className="mb-2 text-[13px] font-medium text-ink">The reads for <C>SELECT {QUERY_COL}</C></figcaption>
         <Reader />
       </figure>
     ),
@@ -239,7 +239,7 @@ const SECTIONS: Sec[] = [
     cycle: 5, // the hops, then a rest
     picture: () => (
       <figure>
-        <figcaption className="mb-2 text-[13px] text-ink-dim">The first <C>{QUERY_COL}</C> chunk, page by page.</figcaption>
+        <figcaption className="mb-2 text-[13px] font-medium text-ink">The first <C>{QUERY_COL}</C> chunk, page by page</figcaption>
         <Walk chunk={WALK} />
       </figure>
     ),
@@ -355,10 +355,10 @@ function Section({ s, i }: { s: Sec; i: number }) {
     <Settled.Provider value={done}>
     <Play.Provider value={play}>
       <KeySlot.Provider value={keyEl}>
-      <section id={s.id} data-sec={i} className="grid grid-cols-1 py-10 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
+      <section id={s.id} data-sec={i} className="grid grid-cols-1 py-7 lg:grid-cols-[minmax(0,640px)_300px] lg:gap-x-12">
         <h2 className="order-1 text-[17px] font-medium leading-snug lg:order-none lg:col-start-1">
-          {/* a quiet label: where you are shows on the rail, not here */}
-          <span className="num mr-2 font-mono text-ink-dim">{i + 1}</span>
+          {/* a small two-digit label above the title; where you are shows on the rail */}
+          <span className="num mb-0.5 block font-mono text-[11px] font-normal tracking-wide text-ink-dim">{String(i + 1).padStart(2, '0')}</span>
           {s.title}
         </h2>
         <div ref={textRef} className="order-2 mt-2 space-y-3 text-[15px] leading-relaxed lg:order-none lg:col-start-1">{s.text}</div>
@@ -448,8 +448,8 @@ export default function Page() {
         <button onClick={() => go(active + 1)} title="next (↓)" aria-label="next" className="mt-1 flex h-[20px] w-[22px] items-center justify-center rounded-[3px] border border-rule-strong text-ink-dim hover:text-ink">{chev(false)}</button>
       </nav>
       {/* the blog post supplies the title and intro, and its main column already has the lab's width and
-          padding. mt-8 stands in for the bottom padding of the lab's own header. */}
-      <div className="mt-8">
+          padding */}
+      <div>
         {SECTIONS.map((s, i) => <Section key={s.id} s={s} i={i} />)}
       </div>
     </div>
